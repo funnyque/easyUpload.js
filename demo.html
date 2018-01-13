@@ -24,7 +24,7 @@
       url: '/api/file/cdn/uploadHead',//上传文件地址
       fileName: 'file',//文件filename配置参数
       formParam: {
-        token: 'DF0193F970BD34A36E84699C8B5AACE2199BE536D328D952E91517507A81B933A71F6DAC339D2A48FEF020906FE29394'
+        token: $.cookie('token_cookie')
       },//文件以外的配置参数，格式：{key1:value1,key2:value2}
       timeout: 30000,//请求超时时间
       successFunc: function(res) {
