@@ -4,28 +4,29 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>easyUpload.js</title>
-  <link rel="stylesheet" href="css/easy-upload.css">
+  <link rel="stylesheet" href="easy-upload.css">
 </head>
 <body>
   <div id="easyContainer"></div>
-  <script src="js/jquery-1.12.4.min.js"></script>
-  <script src="js/jquery.cookie-1.4.1.min.js"></script>
-  <script src="js/easyUpload.js"></script>
+  <script src="vendor/jquery-1.12.4.min.js"></script>
+  <!-- 视实际需要决定是否引入jquery.cookie-1.4.1.min.js-->
+  <script src="vendor/jquery.cookie-1.4.1.min.js"></script>
+  <script src="easyUpload.js"></script>
   <script>
     $('#easyContainer').easyUpload({
-      allowFileTypes: '*.pdf;*.doc;*.docx;*.jpg',//允许上传文件类型，格式'*.pdf;*.doc;'
-      allowFileSize: 100000,//允许上传文件大小(kb)
-      selectText: '选择文件',//上传按钮文案
+      allowFileTypes: '*.jpg;*.doc;*.pdf',//允许上传文件类型，格式';*.doc;*.pdf'
+      allowFileSize: 100000,//允许上传文件大小(KB)
+      selectText: '选择文件',//选择文件按钮文案
       multi: true,//是否允许多文件上传
-      multiNum: 5,//多文件上传时允许的有效文件数
+      multiNum: 5,//多文件上传时允许的文件数
       showNote: true,//是否展示文件上传说明
-      note: '提示：最多上传5个文件，超出默认前五个，支持格式为：doc、docx、pdf、jpg',//文件上传说明
+      note: '提示：最多上传5个文件，支持格式为doc、pdf、jpg',//文件上传说明
       showPreview: true,//是否显示文件预览
       url: '/api/file/upload',//上传文件地址
       fileName: 'file',//文件filename配置参数
       formParam: {
-        token: $.cookie('token_cookie')
-      },//文件以外的配置参数，格式：{key1:value1,key2:value2}
+        token: $.cookie('token_cookie')//不需要验证token时可以去掉
+      },//文件filename以外的配置参数，格式：{key1:value1,key2:value2}
       timeout: 30000,//请求超时时间
       successFunc: function(res) {
         console.log('成功回调', res);

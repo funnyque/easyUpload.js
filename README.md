@@ -1,39 +1,64 @@
 # easyUpload.js
-一款流畅的H5文件上传插件，依赖于jquery
+这是一款H5文件上传插件，之所以写这个，是因为试用过很多资源，却发现都无法满足项目业务需求。大部资源只是涉及一个或两个场景，因此，我决定从第一行代码开始，来打造一个不一样的东西。它可以覆盖大部分应用场景，同时它也必须是高效、稳定、易配置。正是出于以上的动机，便有了这个小项目。本人乃90后前端攻城狮（男），和许多前辈一样妄想改变世界，怎奈水平有限，欢迎各位网友批评指正，也可与我联系交流（WeChat:xunyangpipa；QQ:1016981640）
 
-**# 支持 #**</br>
-1、文件类型自定义（图片及各类文件均可自定义）</br>
-2、文件大小自定义（自定义允许文件大小）</br>
-3、是否允许多文件上传自定义</br>
-4、多文件上传数量自定义</br>
-5、布局样式自定义</br>
-6、单文件上传及删除</br>
-7、多文件一键上传及删除</br>
-8、上传实时进度条</br>
-9、文件预览</br>
+**# 插件支持 #**
+- 支持文件类型自定义
+- 支持文件允许大小自定义
+- 支持是否开启多文件上传自定义
+- 支持多文件上传允许上传文件数自定义
+- 支持样式自定义
+- 支持单文件上传及删除
+- 支持多文件一键上传及删除
+- 支持实时展示上传进度条
+- 支持上传前文件预览
 
-**# 使用 #**</br>
-1、页面head标签内引入'easy-upload.css'
+**# 文件说明 #**<br/>
+实际需要这里用到的文件可能只有：
 
-2、页面script标签内依次引入jquery.js、easyUpload.js
+```sh
+easyUpload.js
+easy-upload.less
+easy-upload.css
+font/
+img/
+```
+easyUpload.js是插件的核心文件；easy-upload.less便于对css修改；easy-upload.css是less预处理后编译文件，对less不熟悉可以直接修改它；font文件夹里有插件需要用到的字体库；img里有显示上传状态的gif；项目中其他文件则是为了便于你查看demo后加入的。当然，这个插件依赖于jq，调用插件之前需要先引入jq。关于插件的使用，你可以参考下面的使用说明，也可以直接查看demo.html内的示例，这样你可以更快的搞明白。
 
-3、插件配置，配置方法如下：
-（页面结构仅需要一个容器，这里是一个id为easyContainer的div）
+**# 使用说明 #**<br/>
+插件使用只需四步：
 
+- 定义一个结构用于放入插件
+```sh
+<div id="easyContainer"></div>
+```
+
+- 引入easy-upload.css
+```sh
+<link rel="stylesheet" href="easy-upload.css">
+```
+
+- 引入jq及easyUpload.js
+```sh
+<script src="vendor/jquery.cookie-1.4.1.min.js"></script>
+<script src="easyUpload.js"></script>
+```
+
+- 配置插件
+```sh
 $('#easyContainer').easyUpload({
-  allowFileTypes: '*.pdf;*.doc;*.docx;*.jpg',//允许上传文件类型，格式'*.pdf;*.doc;'
-  allowFileSize: 100000,//允许上传文件大小(kb)
-  selectText: '选择文件',//上传按钮文案
+  allowFileTypes: '*.jpg;*.doc;*.pdf',//允许上传文件类型，格式';*.doc;*.pdf'
+  allowFileSize: 100000,//允许上传文件大小(KB)
+  selectText: '选择文件',//选择文件按钮文案
   multi: true,//是否允许多文件上传
-  multiNum: 5,//多文件上传时允许的有效文件数
+  multiNum: 5,//多文件上传时允许的文件数
   showNote: true,//是否展示文件上传说明
-  note: '提示：最多上传5个文件，超出默认前五个，支持格式为：doc、docx、pdf、jpg',//文件上传说明
+  note: '提示：最多上传5个文件，支持格式为doc、pdf、jpg',//文件上传说明
   showPreview: true,//是否显示文件预览
-  url: '/api/file/cdn/uploadHead',//上传文件地址
+  url: '/api/file/upload',//上传文件地址
   fileName: 'file',//文件filename配置参数
   formParam: {
-    token: $.cookie('token_cookie')
-  },//文件以外的配置参数，格式：{key1:value1,key2:value2}
+    token: $.cookie('token_cookie')//不需要验证token时可以去掉
+  },//文件filename以外的配置参数，格式：{key1:value1,key2:value2}
   timeout: 30000,//请求超时时间
   successFunc: function(res) {
     console.log('成功回调', res);
@@ -45,3 +70,7 @@ $('#easyContainer').easyUpload({
     console.log('删除回调', res);
   }//删除文件回调函数
 });
+```
+
+**# 另外 #**<br/>
+再次感谢，十分欢迎您的指导，或与我联系交流，如果感到快乐您就拍拍star，O(∩_∩)O哈哈~

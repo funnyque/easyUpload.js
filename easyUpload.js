@@ -128,7 +128,6 @@ https://github.com/funnyque
           $('.easy_upload_head_btn2').off('click').click(function(){
             var queueUl = $(this).parent().parent().find('.easy_upload_queue');
             var arr = _this._findItems(2, queueUl);
-            console.log('删除数组', arr);
             if (arr.length>0) _this._deleFiles(arr,queueUl);
           });
         },
