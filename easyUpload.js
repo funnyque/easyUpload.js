@@ -18,6 +18,7 @@ https://github.com/funnyque
       fileName: 'file',//文件配置参数
       formParam: null,//文件以外的配置参数，格式：{key1:value1,key2:value2}
       timeout: 30000,//请求超时时间
+      okCode: 200,//与后端返回数据code值一致时执行成功回调，不配置默认200
       successFunc: null,//上传成功回调函数
       errorFunc: null,//上传失败回调函数
       deleteFunc: null//删除文件回调函数
@@ -73,9 +74,9 @@ https://github.com/funnyque
           $html += option.multi ? 'multiple ' : '';
           $html += 'class="fileInput" data-count="0" style="display:none;" />';
           $html += '<span class="easy_upload_select noselect">' + option.selectText + '</span>';
-          $html += '<span class="easy_upload_head_btn1 noselect">上传</span>';
-          $html += '<span class="easy_upload_head_btn2 noselect">删除</span>';
-          $html += '<i class="easyUploadIcon noselect head_check" data-checked="no">&#xe693;</i>';
+          $html += option.multi ? '<span class="easy_upload_head_btn1 noselect">上传</span>' : '';
+          $html += option.multi ? '<span class="easy_upload_head_btn2 noselect">删除</span>' : '';
+          $html += option.multi ? '<i class="easyUploadIcon noselect head_check" data-checked="no">&#xe693;</i>' : '';
           $html += option.showNote ? '<span class="easy_upload_note">' + option.note + '</span>' : '';
           $html += '</div>';
           $html += '<ul class="easy_upload_queue"></ul>';
@@ -226,7 +227,7 @@ https://github.com/funnyque
             $html += '<p class="easy_upload_delbtn btn noselect">删除</p>';
             $html += '</div>';
             $html += '<div class="easy_upload_checkone queue_item-section">';
-            $html += '<i class="easyUploadIcon noselect queue_check queue_check_allow_'+ file.allow +'" data-checked="no" data-up="1">&#xe693;</i>';
+            $html += option.multi ? '<i class="easyUploadIcon noselect queue_check queue_check_allow_'+ file.allow +'" data-checked="no" data-up="1">&#xe693;</i>' : '';
             $html += '</div>';
             if (option.multi) {
               $(queueUl).append($html);
@@ -308,7 +309,7 @@ https://github.com/funnyque
                   // 标记索引，用于删除操作
                   res.easyFileIndex = file.index;
                   var param = _this._findEle(file.index, target);
-                  if (res.code!=200){
+                  if (res.code!=option.okCode){
                     allowNewPost = true;
                     if (option.multi) {
                       response.error.push(res);

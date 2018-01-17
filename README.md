@@ -60,6 +60,7 @@ $('#easyContainer').easyUpload({
     token: $.cookie('token_cookie')//不需要验证token时可以去掉
   },//文件filename以外的配置参数，格式：{key1:value1,key2:value2}
   timeout: 10000,//请求超时时间
+  okCode: 200,//与后端返回数据code值一致时执行成功回调，不配置默认200
   successFunc: function(res) {
     console.log('成功回调', res);
   },//上传成功回调函数
