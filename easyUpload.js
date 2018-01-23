@@ -399,7 +399,7 @@ https://github.com/funnyque
         },
         _findEle: function(index, target) {
           var obj = {};
-          obj.ele = $(target).find(`.easy_upload_queue_item[data-index=${index}]`);
+          obj.ele = $(target).find('.easy_upload_queue_item[data-index=' + index +']');
           obj.upBar = $(obj.ele).find('.easy_upload_bar');
           obj.upPeacent = $(obj.ele).find('.easy_upload_percent');
           obj.statusDiv = $(obj.ele).find('.easy_upload_status');
@@ -435,7 +435,7 @@ https://github.com/funnyque
             }); 
           }
           arr.forEach(function(item){
-            $(target).find(`.easy_upload_queue_item[data-index=${item}]`).hide().find('.queue_check').hide();
+            $(target).find('.easy_upload_queue_item[data-index=' + item +']').hide().find('.queue_check').hide();
             if (option.multi) dele(item);
             var qItem = _this._findEle(item, target);
             if (qItem.upStatus=='2') deleAllowFiles(item);
