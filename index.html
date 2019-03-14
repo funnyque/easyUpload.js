@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>easyUploader示例</title>
+    <link rel="stylesheet" href="./main.css">
+    <style>
+        html * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="uploader"></div>
+
+    <script src="./easyUploader.jq.js"></script>
+    <script>
+        var uploader = easyUploader({
+            id: "uploader",
+            accept: '.jpg,.png',
+            action: 'https://jsonplaceholder.typicode.com/posts/',
+            dataFormat: 'formData',
+            maxCount: 10,
+            maxSize: 3,
+            multiple: true,
+            data: null,
+            beforeUpload: function(file, data, args) {
+                data.append('token', '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT'); //上传方式为formData时
+                // data.id = file.id; //上传方式为base64时
+            },
+            onChange: function(fileList) {
+                /* input选中时触发 */
+            },
+            onRemove: function(removedFiles, files) {
+                console.log('onRemove', deletedFiles);
+            },
+            onSuccess: function(res) {
+                console.log('onSuccess', res);
+            },
+            onError: function(err) {
+                console.log('onError', err);
+            },
+        });
+
+        var files = uploader.files; //通过实例的files熟悉可以访问上传文件
+        console.log(files);
+    </script>
+</body>
+</html>
