@@ -28,25 +28,26 @@
             multiple: true,
             data: null,
             beforeUpload: function(file, data, args) {
-                data.append('token', '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT'); //上传方式为formData时
-                // data.id = file.id; //上传方式为base64时
+                data.append('token', '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT'); //上传方式为formData时添加参数的方式
+                // data.token = '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT'; //上传方式为base64时添加参数的方式
+                // data.base = file.base; //上传方式为base64时添加参数的方式
             },
             onChange: function(fileList) {
                 /* input选中时触发 */
             },
             onRemove: function(removedFiles, files) {
-                console.log('onRemove', deletedFiles);
+                console.log('onRemove', removedFiles);
             },
             onSuccess: function(res) {
                 console.log('onSuccess', res);
+
+                var files = uploader.files; //通过实例的files熟悉可以访问上传文件
+                console.log(files);
             },
             onError: function(err) {
                 console.log('onError', err);
             },
         });
-
-        var files = uploader.files; //通过实例的files熟悉可以访问上传文件
-        console.log(files);
     </script>
 </body>
 </html>

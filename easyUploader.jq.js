@@ -17,7 +17,7 @@
     var defaultConfigs = {
         id: "", //渲染容器id
         accept: '.jpg,.png', //上传类型
-        action: "", //自动上传地址
+        action: "", //上传地址
         autoUpload: false, //是否开启自动上传
         contentType: 'application/x-www-form-urlencoded', //同$.ajax参数，默认值为application/x-www-form-urlencoded
         crossDomain: true, //是否允许跨域
@@ -47,7 +47,6 @@
 
     easyUploader.prototype = {
         configs: {}, // 当前实例的配置
-        styles: {}, // 当前实例的样式
         files: [],
         fileId: 0, // ajax待传文件id
         fileObj: {
@@ -63,7 +62,7 @@
             isReady: true,
             index: 0, //用于接收最近一个等待上传文件的索引
         },
-        initPlugin: function (configs, styles) {
+        initPlugin: function (configs) {
             this.configs = Object.assign({}, defaultConfigs, configs);
             var container = document.getElementById(this.configs.id);
             if (!container) {
@@ -92,7 +91,7 @@
             +  '终止上传'
             +  '</span>'
             +  '<i class="btn-check-all cursor-select checkbox unchecked"></i>'
-            +  '<input class="input-file" type="file" '
+            +  '<input class="input-file" type="file" accept="' + this.configs.accept + '" '
             +  (this.configs.multiple ? 'multiple="multiple" ' : '')
             +  'style="display:none;"></input>'
             +  '</div>'
@@ -234,7 +233,7 @@
                 that = this;
             $(".btn-delete-item").off("click").on("click", function () {
                 id = $(this).parent().attr('id');
-                if (that.files[that.ajax.index].id == id && that.files[that.ajax.index].uploadStatus == 'loading') {
+                if (that.files[that.ajax.index] && that.files[that.ajax.index].id == id && that.files[that.ajax.index].uploadStatus == 'loading') {
                     var message = '正在上传，请稍后';
                     if (that.configs.showAlert) { alert(message); }
                 } else {

@@ -5,8 +5,8 @@
  * @version 2.0
  * @description js小文件上传插件，支持多文件上传、批量上传及混合上传
  */
-;(function(window, document) {
-    var easyUploader = function(configs) {
+; (function (window, document) {
+    var easyUploader = function (configs) {
         if (!configs || !configs.id) { alert('缺少配置参数'); return; }
         if (!(this instanceof easyUploader)) return new easyUploader(configs);
         this.initPlugin(configs);
@@ -14,7 +14,7 @@
     var defaultConfigs = {
         id: "", //渲染容器id
         accept: '.jpg,.png', //上传类型
-        action: "", //自动上传地址
+        action: "", //上传地址
         autoUpload: false, //是否开启自动上传
         contentType: 'application/x-www-form-urlencoded', //同$.ajax参数，默认值为application/x-www-form-urlencoded
         crossDomain: true, //是否允许跨域
@@ -44,7 +44,6 @@
 
     easyUploader.prototype = {
         configs: {}, // 当前实例的配置
-        styles: {}, // 当前实例的样式
         files: [],
         fileId: 0, // ajax待传文件id
         fileObj: {
@@ -60,7 +59,7 @@
             isReady: true,
             index: 0, //用于接收最近一个等待上传文件的索引
         },
-        initPlugin: function (configs, styles) {
+        initPlugin: function (configs) {
             this.configs = Object.assign({}, defaultConfigs, configs);
             var container = document.getElementById(this.configs.id);
             if (!container) {
@@ -72,45 +71,45 @@
             }
             this.startInterceptor(); // 启动拦截器
         },
-        buildUploader: function() {
+        buildUploader: function () {
             var html = '';
-            html+= '<div class="easy-uploader">'
-            +  '<div class="btn-box">'
-            +  '<span class="btn-select-file btn">'
-            +  '选取文件'
-            +  '</span>'
-            +  '<span class="btn-upload-file btn primary">'
-            +  '上传文件'
-            +  '</span>'
-            +  '<span class="btn-delete-file btn danger">'
-            +  '删除文件'
-            +  '</span>'
-            +  '<span class="btn-cancel-upload btn danger">'
-            +  '终止上传'
-            +  '</span>'
-            +  '<i class="btn-check-all cursor-select checkbox unchecked"></i>'
-            +  '<input class="input-file" type="file" '
-            +  (this.configs.multiple ? 'multiple="multiple" ' : '')
-            +  'style="display:none;"></input>'
-            +  '</div>'
-            +  '<ul class="list">'
-            +  '</ul>'
-            +  '</div>';
+            html += '<div class="easy-uploader">'
+                + '<div class="btn-box">'
+                + '<span class="btn-select-file btn">'
+                + '选取文件'
+                + '</span>'
+                + '<span class="btn-upload-file btn primary">'
+                + '上传文件'
+                + '</span>'
+                + '<span class="btn-delete-file btn danger">'
+                + '删除文件'
+                + '</span>'
+                + '<span class="btn-cancel-upload btn danger">'
+                + '终止上传'
+                + '</span>'
+                + '<i class="btn-check-all cursor-select checkbox unchecked"></i>'
+                + '<input class="input-file" type="file" accept="' + this.configs.accept + '" '
+                + (this.configs.multiple ? 'multiple="multiple" ' : '')
+                + 'style="display:none;"></input>'
+                + '</div>'
+                + '<ul class="list">'
+                + '</ul>'
+                + '</div>';
             return html;
         },
-        updateHeadDom: function() {
+        updateHeadDom: function () {
             let isAllChecked = true;
-            this.files.forEach(function(item) { if (!item.checked) { isAllChecked = false; } });
+            this.files.forEach(function (item) { if (!item.checked) { isAllChecked = false; } });
             if (isAllChecked) {
                 $(this.node.input).siblings('.checkbox').removeClass('unchecked').addClass('checked');
             } else {
                 $(this.node.input).siblings('.checkbox').removeClass('checked').addClass('unchecked');
             }
         },
-        updateFilesDom: function() {
+        updateFilesDom: function () {
             var that = this,
                 html = '';
-            var buildCheckBox = function(fileItem) {
+            var buildCheckBox = function (fileItem) {
                 if (that.configs.multiple) {
                     if (fileItem.checked) {
                         return '<i class="btn-check-item select-icon cursor-select checkbox checked"></i>';
@@ -121,54 +120,54 @@
                     return '';
                 }
             },
-            matchProgressText = function (fileItem) {
-                if (fileItem.uploadPercentage == 0) {
-                    if (fileItem.uploadStatus == 'loading') {
-                        return '等待';
+                matchProgressText = function (fileItem) {
+                    if (fileItem.uploadPercentage == 0) {
+                        if (fileItem.uploadStatus == 'loading') {
+                            return '等待';
+                        } else {
+                            return '0%';
+                        }
                     } else {
-                        return '0%';
+                        if (fileItem.uploadStatus == 'error') {
+                            return '失败';
+                        } else {
+                            return (fileItem.uploadPercentage + '%');
+                        }
                     }
-                } else {
-                    if (fileItem.uploadStatus == 'error') {
-                        return '失败';
-                    } else {
-                        return (fileItem.uploadPercentage + '%');
-                    }
-                }
-            };
-            this.files.forEach(function(fileItem, index) {
+                };
+            this.files.forEach(function (fileItem, index) {
                 html += '<li id="' + fileItem.id + '" class="list-item">'
-                +  '<div class="preview">'
-                +  '<img class="preview-img" src="' + fileItem.previewBase +'" />'
-                +  '</div>'
-                +  '<div class="info">'
-                +  '<p class="filename">'
-                +  fileItem.file.name
-                +  '</p>'
-                +  '<div class="progress-wrapper">'
-                +  '<div class="progressbar" style="width:' + fileItem.uploadPercentage + '%;'
-                +  (fileItem.uploadStatus == 'error' ? 'background-color:#f56c6c' : '') + '">'
-                +  '</div>'
-                +  '<div class="progress-text">'
-                +  matchProgressText(fileItem)
-                +  '</div>'
-                +  '</div>'
-                +  buildCheckBox(fileItem)
-                +  '</div>'
-                +  '<label class="btn-delete-item delete-label cursor-select">'
-                +  '<i class="delete-icon">X</i>'
-                +  '</label>'
-                +  '</li>';
+                    + '<div class="preview">'
+                    + '<img class="preview-img" src="' + fileItem.previewBase + '" />'
+                    + '</div>'
+                    + '<div class="info">'
+                    + '<p class="filename">'
+                    + fileItem.file.name
+                    + '</p>'
+                    + '<div class="progress-wrapper">'
+                    + '<div class="progressbar" style="width:' + fileItem.uploadPercentage + '%;'
+                    + (fileItem.uploadStatus == 'error' ? 'background-color:#f56c6c' : '') + '">'
+                    + '</div>'
+                    + '<div class="progress-text">'
+                    + matchProgressText(fileItem)
+                    + '</div>'
+                    + '</div>'
+                    + buildCheckBox(fileItem)
+                    + '</div>'
+                    + '<label class="btn-delete-item delete-label cursor-select">'
+                    + '<i class="delete-icon">X</i>'
+                    + '</label>'
+                    + '</li>';
             });
             this.node.list.html(html);
             this.bindListEvent();
             this.updateHeadDom(); //list更新时同时保持button区域匹配
         },
-        bindHeadEvent: function() {
+        bindHeadEvent: function () {
             var that = this;
-            $(".btn-select-file").off("click").on("click", function() {
+            $(".btn-select-file").off("click").on("click", function () {
                 that.node.list = $(this).parent().siblings(".list");
-                $(this).parent().children(".input-file").trigger("click").on("change", function(e) {
+                $(this).parent().children(".input-file").trigger("click").on("change", function (e) {
                     that.fileObj = { fileList: e.target.files, isReady: true };
                     that.node.input = $(this);
                     that.updateFiles();
@@ -194,14 +193,14 @@
             });
             $(".btn-delete-file").off("click").on("click", function () {
                 var hasLoading = false;
-                that.files.forEach(function(item) { if (item.uploadStatus == 'loading') { hasLoading = true; } });
+                that.files.forEach(function (item) { if (item.uploadStatus == 'loading') { hasLoading = true; } });
                 if (hasLoading) {
                     var message = '正在上传，请稍后';
                     if (that.configs.showAlert) { alert(message); }
                     that.configs.onAlert && that.configs.onAlert(message);
                 } else {
                     var newFiles = [];
-                    that.files.forEach(function(item, index) {
+                    that.files.forEach(function (item, index) {
                         if (!item.checked) { newFiles.push(item); }
                     });
                     that.files = newFiles;
@@ -221,25 +220,25 @@
                     isChecked = true;
                     $(this).removeClass('unchecked').addClass('checked');
                 }
-                that.files.forEach(function(item) { item.checked = isChecked; });
+                that.files.forEach(function (item) { item.checked = isChecked; });
                 that.updateFilesDom();
             });
         },
-        bindListEvent: function() {
+        bindListEvent: function () {
             var id = undefined,
                 hasLoading = false,
                 that = this;
             $(".btn-delete-item").off("click").on("click", function () {
                 id = $(this).parent().attr('id');
-                if (that.files[that.ajax.index].id == id && that.files[that.ajax.index].uploadStatus == 'loading') {
+                if (that.files[that.ajax.index] && that.files[that.ajax.index].id == id && that.files[that.ajax.index].uploadStatus == 'loading') {
                     var message = '正在上传，请稍后';
                     if (that.configs.showAlert) { alert(message); }
                 } else {
-                    that.files.forEach(function(item) {
+                    that.files.forEach(function (item) {
                         if (item.uploadStatus == 'loading') { hasLoading = true; }
                     });
                     if (hasLoading) { that.ajax.isReady = false; } //删除之前先关闭开关
-                    that.files.forEach(function(item, index) {
+                    that.files.forEach(function (item, index) {
                         if (item.id == id) { that.files.splice(index, 1); }
                     });
                     if (hasLoading) {
@@ -323,7 +322,7 @@
             }
             img.src = base;
         },
-        formatFile: function(file, previewBase, base) {
+        formatFile: function (file, previewBase, base) {
             this.files.push({
                 ajaxResponse: undefined,
                 base: base,
@@ -345,11 +344,11 @@
                 isSizeOver = false,
                 timer = null,
                 that = this;
-            var onAlert= function(message) {
+            var onAlert = function (message) {
                 if (that.configs.showAlert) { alert(message); }
                 if (that.configs.onAlert) { that.configs.onAlert(message); }
             }
-            timer = setInterval(function() {
+            timer = setInterval(function () {
                 if (that.fileObj.isReady) {
                     if (that.fileObj.fileList[index] && that.fileObj.fileList[index].size > that.configs.maxSize * (1024 * 1024)) {
                         isSizeOver = true;
@@ -390,14 +389,15 @@
                         $(that.node.input).val("");
                         clearInterval(timer);
                         if (that.configs.autoUpload) {
-                            that.files.forEach(function(item) { item.checked = true; });
+                            that.files.forEach(function (item) { item.checked = true; });
+                            console.log(888)
                             that.upload();
                         } //开启自动上传时调用上传方法
                     }
                 }
             }, 10);
         },
-        startInterceptor: function() {
+        startInterceptor: function () {
             var that = this;
             $.ajaxSetup({
                 crossDomain: that.configs.crossDomain,
@@ -409,28 +409,28 @@
                 }
             });
         },
-        upload: function() {
+        upload: function () {
             if (this.ajax.isReady) { //开关打开才能进行操作
                 var that = this,
                     hasChecked = false,
                     checkedWaitingFiles = [];
-                that.files.forEach(function(item) { 
+                that.files.forEach(function (item) {
                     if (item.checked) {
                         hasChecked = true;
-                        if (item.uploadStatus == 'waiting' || (item.uploadStatus == 'loading' && item.uploadPercentage==0)) { 
+                        if (item.uploadStatus == 'waiting' || (item.uploadStatus == 'loading' && item.uploadPercentage == 0)) {
                             checkedWaitingFiles.push(item);
                         }
                     }
                 });
                 if (hasChecked) {
                     if (checkedWaitingFiles.length) {
-                        that.files.forEach(function(item, index) {
+                        that.files.forEach(function (item, index) {
                             if (item.id == checkedWaitingFiles[0].id) {
                                 that.ajax.index = index;
                             }
                         });
-                        checkedWaitingFiles.forEach(function(item1) {
-                            that.files.forEach(function(item2) {
+                        checkedWaitingFiles.forEach(function (item1) {
+                            that.files.forEach(function (item2) {
                                 if (item1.id == item2.id) {
                                     item2.uploadStatus = 'loading';
                                 }
@@ -454,7 +454,7 @@
                             xhr: function () {
                                 var myXhr = $.ajaxSettings.xhr();
                                 if (myXhr.upload) {
-                                    myXhr.upload.addEventListener('progress', function(e) {
+                                    myXhr.upload.addEventListener('progress', function (e) {
                                         that.files[that.ajax.index].uploadPercentage = Math.floor(100 * e.loaded / e.total);
                                         that.updateFilesDom();
                                     }, false);
@@ -484,7 +484,7 @@
                         });
                     }
 
-                } 
+                }
             }
         }
     };
