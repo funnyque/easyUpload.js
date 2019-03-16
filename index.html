@@ -16,6 +16,8 @@
 <body>
     <div id="uploader"></div>
 
+    <div id="tester"></div>
+
     <script src="./easyUploader.jq.js"></script>
     <script>
         var uploader = easyUploader({
@@ -28,9 +30,14 @@
             multiple: true,
             data: null,
             beforeUpload: function(file, data, args) {
-                data.append('token', '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT'); //上传方式为formData时添加参数的方式
-                // data.token = '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT'; //上传方式为base64时添加参数的方式
-                // data.base = file.base; //上传方式为base64时添加参数的方式
+                /* dataFormat为formData时配置发送数据的方式 */
+                data.append('token', '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT');
+                data.append('otherKey', 'otherValue');
+
+                /* dataFormat为base64时配置发送数据的方式 */
+                // data.base = file.base;
+                // data.token = '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT';
+                // data.otherKey = 'otherValue';
             },
             onChange: function(fileList) {
                 /* input选中时触发 */
@@ -41,8 +48,72 @@
             onSuccess: function(res) {
                 console.log('onSuccess', res);
 
-                var files = uploader.files; //通过实例的files熟悉可以访问上传文件
-                console.log(files);
+                /* 通过实例的files熟悉可以访问上传文件 */
+                var files = uploader.files;
+                console.log('files', files);
+        
+                /*
+                    files中各个字段值表示意思如下
+                    ajaxResponse: ajax的的响应结果
+                    base: 文件的base64编码
+                    checked: 该文件是否被选中
+                    file: 文件对象
+                    id: 插件内部标识的文件id
+                    isImg: 插件内部标识文件时否是图片
+                    previewBase: 文件压缩后的base64编码，用于插件内部展示预览图
+                    uploadPercentage: 文件上传进度百分比值
+                    uploadStatus: 文件上传状态
+                */
+            },
+            onError: function(err) {
+                console.log('onError', err);
+            },
+        });
+
+        var tester = easyUploader({
+            id: "tester",
+            accept: '.jpg,.png',
+            action: 'https://jsonplaceholder.typicode.com/posts/',
+            dataFormat: 'formData',
+            maxCount: 10,
+            maxSize: 3,
+            multiple: true,
+            data: null,
+            beforeUpload: function(file, data, args) {
+                /* dataFormat为formData时配置发送数据的方式 */
+                data.append('token', '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT');
+                data.append('otherKey', 'otherValue');
+
+                /* dataFormat为base64时配置发送数据的方式 */
+                // data.base = file.base;
+                // data.token = '387126b0-7b3e-4a2a-86ad-ae5c5edd0ae6TT';
+                // data.otherKey = 'otherValue';
+            },
+            onChange: function(fileList) {
+                /* input选中时触发 */
+            },
+            onRemove: function(removedFiles, files) {
+                console.log('onRemove', removedFiles);
+            },
+            onSuccess: function(res) {
+                console.log('onSuccess', res);
+
+                /* 通过实例的files熟悉可以访问上传文件 */
+                var files = uploader.files;
+                console.log('files', files);
+        
+                /*
+                    files中各个字段值表示意思如下
+                    ajaxResponse: ajax的的响应结果
+                    base: 文件的base64编码
+                    checked: 该文件是否被选中
+                    file: 文件对象
+                    id: 插件内部标识的文件id
+                    isImg: 插件内部标识文件时否是图片
+                    previewBase: 文件压缩后的base64编码，用于插件内部展示预览图
+                    uploadPercentage: 文件上传进度百分比值
+                    uploadStatus: 文件上传状态
+                */
             },
             onError: function(err) {
                 console.log('onError', err);

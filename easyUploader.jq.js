@@ -15,52 +15,53 @@
         this.initPlugin(configs);
     };
     var defaultConfigs = {
-        id: "", //渲染容器id
-        accept: '.jpg,.png', //上传类型
-        action: "", //上传地址
-        autoUpload: false, //是否开启自动上传
-        contentType: 'application/x-www-form-urlencoded', //同$.ajax参数，默认值为application/x-www-form-urlencoded
-        crossDomain: true, //是否允许跨域
-        data: null, //上传配置参数
-        dataFormat: 'formData', //上传表单类型，有formData和base64两种
-        dataType: 'json', //同$.ajax，默认返回数据格式为json
-        headers: undefined, //上传的请求头部
-        maxCount: 3, //最大上传文件数
-        maxSize: 3, //最大上传文件体积，单位M
-        multiple: false, //是否开启多选上传
-        name: 'file', //上传的文件字段名
-        previewWidth: 70, //压缩预览图的宽度
-        processData: false, //同$.ajax参数，这里默认为false
-        successKey: 'code', //标识上传成功的key
-        successValue: 200, //标识上传成功对应的value
-        showAlert: true, //是否开启alert提示
-        timeout: 300000, //ajax请求超时时间，默认30秒
-        withCredentials: true, //是否支持发送 cookie 凭证信息
-        beforeUpload: null, //ajax上传前的钩子
-        onAlert: null, //alert时的钩子
-        onChange: null, //input change的回调函数
-        onError: null, //上传失败时的钩子
-        onRemove: null, //移除文件时的钩子
-        onSuccess: null, //上传成功时的钩子
+        id: "", /* 渲染容器id */
+        accept: '.jpg,.png', /* 上传类型 */
+        action: "", /* 上传地址 */
+        autoUpload: false, /* 是否开启自动上传 */
+        crossDomain: true, /* 是否允许跨域 */
+        data: null, /* 上传配置参数，依据dataFormat而不同， */
+        dataFormat: 'formData', /* 上传表单类型，有formData和base64两种 */
+        dataType: 'json', /* 同$.ajax，默认返回数据格式为json */
+        headers: {
+            contentType: 'application/x-www-form-urlencoded',
+        }, /* 上传的请求头部 */
+        maxCount: 3, /* 最大上传文件数 */
+        maxSize: 3, /* 最大上传文件体积，单位M */
+        multiple: false, /* 是否开启多选上传 */
+        name: 'file', /* 上传的文件字段名 */
+        previewWidth: 70, /* 压缩预览图的宽度，样式中高度等于宽度 */
+        processData: false, /* 同$.ajax参数，这里默认为false */
+        successKey: 'code', /* 标识上传成功的key */
+        successValue: 200, /* 标识上传成功对应的value */
+        showAlert: true, /* 是否开启alert提示 */
+        timeout: 0, /* ajax请求超时时间，默认值为0，表示永不超时*/
+        withCredentials: true, /* 是否支持发送 cookie 凭证信息 */
+        beforeUpload: null, /* ajax上传前的钩子 */
+        onAlert: null, /* alert时的钩子 */
+        onChange: null, /* input change的回调函数 */
+        onError: null, /* 上传失败时的钩子 */
+        onRemove: null, /* 移除文件时的钩子 */
+        onSuccess: null, /* 上传成功时的钩子 */
     },
     iconFile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAFVBMVEWZmZmZmZmZmZmZmZmZmZmZmZmZmZk9goCmAAAAB3RSTlMC/rYs1mCR8/Hv3QAAAYBJREFUWMPtmMsSwyAIRRWE///kGmMTH6CYtN0012knC+cU4Uq0zj169CkhqEI7hb2uYOZQnA2cx/GQHjeOFRP0qcHOQe9phLFyCAeBckwc3C1hxDgYchBJEZaYSIgcHpVHE1bRpAzxulUKDuzrCUoVcPOVLCo9t0fjUOGw7k4qaxxyduPPShzQkx8xcHDCOykyZ4zBwysHJnFwEXN4pZhHAmeGeXuFi6UI8Uwx2SuYNn9W6LbXHJM5rUtpFZM9hxCi/P7V7i4LpvYc1oVrMBDOQTVGyKmGwX7dJ6bnqNHwKaCuGbYcFSM3Topb1G0frjkrmLTQzSNpVMVZwaQSjbqYERNBZ0dlE0bpwYKNFgt+BeNKDF/HlF3YXcdYzgn/iklNSRZd9I3YL23RsKp8eHwKfhdDqhh/X/APYVDX11JMC0cBCYOcu7t3dzDUv2tuYGDh0CbmJr2Llw60Ixd/DWO9+3FbnfYobg1mNDFdRufyfrSmzLFodoFGYoPo+a9jVS+3Nw2jSs30KQAAAABJRU5ErkJggg=='; // 非图像文件预览的base64编码
 
     easyUploader.prototype = {
-        configs: {}, // 当前实例的配置
+        configs: {}, /* 当前实例的配置 */
         files: [],
-        fileId: 0, // ajax待传文件id
+        fileId: 0, /* ajax待传文件id */
         fileObj: {
-            fileList: [], // 当前实例选中过滤后的文件
-            isReady: true // 图片转base是异步的，用开关来控制每一次更新
+            fileList: [], /* 当前实例选中过滤后的文件 */
+            isReady: true /* 图片转base是异步的，用开关来控制每一次更新 */
         },
-        node: { // 用于接收dom节点
+        node: { /* 用于接收dom节点 */
             list: null,
             input: null
         },
         ajax: {
             example: null,
             isReady: true,
-            index: 0, //用于接收最近一个等待上传文件的索引
+            index: 0, /*用于接收最近一个等待上传文件的索引 */
         },
         initPlugin: function (configs) {
             this.configs = Object.assign({}, defaultConfigs, configs);
@@ -72,7 +73,7 @@
                 container.innerHTML = this.buildUploader();
                 this.bindHeadEvent();
             }
-            this.startInterceptor(); // 启动拦截器
+            this.startInterceptor(); /* 启动拦截器 */
         },
         buildUploader: function() {
             var html = '';
@@ -164,7 +165,7 @@
             });
             this.node.list.html(html);
             this.bindListEvent();
-            this.updateHeadDom(); //list更新时同时保持button区域匹配
+            this.updateHeadDom(); /* 每更新一次list，默认调一次updateHeadDom */
         },
         bindHeadEvent: function() {
             var that = this;
@@ -178,7 +179,7 @@
                 });
             });
             $(".btn-upload-file").off("click").on("click", function () {
-                var hasLoading = false; //用于标识队列中还存在上传状态
+                var hasLoading = false; /* 用于标识队列中还存在上传状态 */
                 that.files.forEach(function (item) { if (item.uploadStatus == 'loading') { hasLoading = true; } });
                 if (hasLoading) {
                     if (that.ajax.isReady) {
@@ -196,23 +197,31 @@
             });
             $(".btn-delete-file").off("click").on("click", function () {
                 var hasLoading = false;
-                that.files.forEach(function(item) { if (item.uploadStatus == 'loading') { hasLoading = true; } });
+                that.files.forEach(function(item) {
+                    if (item.checked && item.uploadStatus == 'loading') { hasLoading = true; }
+                });
                 if (hasLoading) {
-                    var message = '正在上传，请稍后';
+                    var message = '正在上传，请稍后操作';
                     if (that.configs.showAlert) { alert(message); }
                     that.configs.onAlert && that.configs.onAlert(message);
                 } else {
                     var newFiles = [];
-                    that.files.forEach(function(item, index) {
+                    that.ajax.isReady = false;
+                    that.files.forEach(function (item) {
                         if (!item.checked) { newFiles.push(item); }
                     });
                     that.files = newFiles;
                     that.updateFilesDom();
+                    that.ajax.isReady = true;
                 }
             });
             $(".btn-cancel-upload").off("click").on("click", function () {
-                that.ajax.isReady = false; //关闭开关
+                that.ajax.isReady = false; /* 关闭开关 */
                 that.ajax.example.abort();
+                that.files.forEach(function(item) {
+                    if (item.uploadStatus == 'loading') {item.uploadStatus = 'waiting'; }
+                });
+                that.updateFilesDom();
             });
             $(".btn-check-all").off("click").on("click", function () {
                 var isChecked = true;
@@ -223,32 +232,31 @@
                     isChecked = true;
                     $(this).removeClass('unchecked').addClass('checked');
                 }
-                that.files.forEach(function(item) { item.checked = isChecked; });
+                that.files.forEach(function(item) { 
+                    item.checked = isChecked;
+                    if (!item.checked && item.uploadStatus == 'loading') {
+                        item.uploadStatus = 'waiting';
+                    }
+                });
                 that.updateFilesDom();
             });
         },
         bindListEvent: function() {
             var id = undefined,
-                hasLoading = false,
                 that = this;
             $(".btn-delete-item").off("click").on("click", function () {
                 id = $(this).parent().attr('id');
-                if (that.files[that.ajax.index] && that.files[that.ajax.index].id == id && that.files[that.ajax.index].uploadStatus == 'loading') {
-                    var message = '正在上传，请稍后';
+                if (that.files[that.ajax.index].id == id && that.files[that.ajax.index].uploadStatus == 'loading') {
+                    var message = '正在上传，请稍后操作';
                     if (that.configs.showAlert) { alert(message); }
+                    that.configs.onAlert && that.configs.onAlert(message);
                 } else {
-                    that.files.forEach(function(item) {
-                        if (item.uploadStatus == 'loading') { hasLoading = true; }
-                    });
-                    if (hasLoading) { that.ajax.isReady = false; } //删除之前先关闭开关
-                    that.files.forEach(function(item, index) {
+                    that.ajax.isReady = false;
+                    that.files.forEach(function (item, index) {
                         if (item.id == id) { that.files.splice(index, 1); }
                     });
-                    if (hasLoading) {
-                        that.ajax.isReady = false; //关闭开关
-                        that.upload();
-                    }
                     that.updateFilesDom();
+                    that.ajax.isReady = true;
                 }
             });
             $(".btn-check-item").off("click").on("click", function () {
@@ -257,12 +265,13 @@
                     if (item.id == id) {
                         if (item.checked) {
                             item.checked = false;
+                            if (item.uploadStatus == 'loading') { item.uploadStatus = 'waiting'; }
                         } else {
                             item.checked = true;
                         }
                     }
                 });
-                that.updateFilesDom(); //后面默认调了一次updateHeadDom
+                that.updateFilesDom();
             });
         },
         checkImg: function (file) {
@@ -273,7 +282,7 @@
             });
             return isImg;
         },
-        convertToBase(file) {
+        convertToBase: function(file) {
             var reader,
                 isImg = this.checkImg(file);
             if (typeof FileReader !== 'undefined') {
@@ -291,7 +300,7 @@
             }
             reader.readAsDataURL(file);
         },
-        compressImg(base, file) {
+        compressImg: function(base, file) {
             var img;
             if (typeof Image !== 'undefined') {
                 img = new Image();
@@ -337,12 +346,12 @@
                 uploadPercentage: 0,
                 uploadStatus: 'waiting',
             });
-            this.fileId++; // 保证id自增
-            this.updateFilesDom(); // 更新上传文件的dom
-            this.fileObj.isReady = true; // 每完成一次push打开开关
+            this.fileId++; /* 保证id自增 */
+            this.updateFilesDom(); /* 更新上传文件的dom */
+            this.fileObj.isReady = true; /* 每完成一次push打开开关 */
         },
         updateFiles: function (type) {
-            var existingCout = this.files.length, // files 数组里已有的数量
+            var existingCout = this.files.length, /* files 数组里已有的数量 */
                 index = 0,
                 isSizeOver = false,
                 timer = null,
@@ -355,10 +364,10 @@
                 if (that.fileObj.isReady) {
                     if (that.fileObj.fileList[index] && that.fileObj.fileList[index].size > that.configs.maxSize * (1024 * 1024)) {
                         isSizeOver = true;
-                        index++; // 发现文件尺寸超出就跳过当前文件
+                        index++; /* 发现文件尺寸超出就跳过当前文件 */
                     }
                     if (that.files.length < that.configs.maxCount && index < that.fileObj.fileList.length) {
-                        that.fileObj.isReady = false; // 一旦进入代码块立即关闭更新开关
+                        that.fileObj.isReady = false; /* 一旦进入代码块立即关闭更新开关 */
                         that.convertToBase(that.fileObj.fileList[index]);
                         index++;
                     } else {
@@ -393,9 +402,8 @@
                         clearInterval(timer);
                         if (that.configs.autoUpload) {
                             that.files.forEach(function(item) { item.checked = true; });
-                            console.log(888)
                             that.upload();
-                        } //开启自动上传时调用上传方法
+                        } /* 开启自动上传时调用上传方法 */
                     }
                 }
             }, 10);
@@ -413,7 +421,7 @@
             });
         },
         upload: function() {
-            if (this.ajax.isReady) { //开关打开才能进行操作
+            if (this.ajax.isReady) { /* 开关打开才能进行上传操作 */
                 var that = this,
                     hasChecked = false,
                     checkedWaitingFiles = [];
@@ -444,13 +452,13 @@
                             this.configs.data = new FormData();
                             this.configs.data.append(this.configs.name, this.files[this.ajax.index].file);
                         } else {
-                            this.configs.data = {}; //设为空对象便于在beforeUpload钩子中配置
+                            this.configs.data = {}; /* 设为空对象便于在beforeUpload钩子中配置 */
                         }
                         this.ajax.example = $.ajax({
                             url: that.configs.action,
                             type: "POST",
+                            headers: that.configs.headers,
                             data: that.configs.data,
-                            contentType: that.configs.contentType,
                             dataType: that.configs.dataType,
                             processData: that.configs.processData,
                             timeout: that.configs.timeout,
