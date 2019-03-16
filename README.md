@@ -1,7 +1,7 @@
 # easyUpload.js
 V2.0 以后更名为 easyUploader.js，是一款简单易用 H5 上传插件，主要面向小文件，支持多文件上传，批量上传，以及混合上传  
 ![easyUploader](/example/01.jpg)  
-[试一试](/example/index.html)
+[试一试](http://www.jq22.com/jquery-info17836)
 
 ## 支持
 - 文件类型可配置
@@ -69,7 +69,7 @@ V2.0 以后更名为 easyUploader.js，是一款简单易用 H5 上传插件，�
             onSuccess: function(res) {
                 console.log('onSuccess', res);
 
-                /* 通过实例的files熟悉可以访问上传文件 */
+                /* 通过实例的files属性可以访问上传文件 */
                 var files = uploader.files;
                 console.log('files', files);
         
