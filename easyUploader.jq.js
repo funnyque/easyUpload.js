@@ -1,8 +1,8 @@
 /**
- * @author  funnyque@163.com (qq:1016981640)
+ * @author  funnyque@163.com (github:https://github.com/funnyque/easyUpload.js) (qq:1016981640)
  * @param   configs(required)
  * @return  Xhr object
- * @version 2.0
+ * @version 2.0.3
  * @description js小文件上传插件，支持多文件上传、批量上传及混合上传
  */
 ;(function(window, document) {
@@ -24,8 +24,8 @@
         dataFormat: 'formData', /* 上传表单类型，有formData和base64两种 */
         dataType: 'json', /* 同$.ajax，默认返回数据格式为json */
         headers: {
-            contentType: 'application/x-www-form-urlencoded',
-        }, /* 上传的请求头部 */
+          // testKey: 'testValue'
+        }, /* 上传的请求头部，视需要配置 */
         maxCount: 3, /* 最大上传文件数 */
         maxSize: 3, /* 最大上传文件体积，单位M */
         multiple: false, /* 是否开启多选上传 */
@@ -37,12 +37,12 @@
         showAlert: true, /* 是否开启alert提示 */
         timeout: 0, /* ajax请求超时时间，默认值为0，表示永不超时*/
         withCredentials: true, /* 是否支持发送 cookie 凭证信息 */
-        beforeUpload: null, /* ajax上传前的钩子 */
-        onAlert: null, /* alert时的钩子 */
+        beforeUpload: null, /* ajax上传前的回调函数 */
+        onAlert: null, /* alert时的回调函数 */
         onChange: null, /* input change的回调函数 */
-        onError: null, /* 上传失败时的钩子 */
-        onRemove: null, /* 移除文件时的钩子 */
-        onSuccess: null, /* 上传成功时的钩子 */
+        onError: null, /* 上传失败时的回调函数 */
+        onRemove: null, /* 移除文件时的回调函数 */
+        onSuccess: null, /* 上传成功时的回调函数 */
     },
     iconFile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAFVBMVEWZmZmZmZmZmZmZmZmZmZmZmZmZmZk9goCmAAAAB3RSTlMC/rYs1mCR8/Hv3QAAAYBJREFUWMPtmMsSwyAIRRWE///kGmMTH6CYtN0012knC+cU4Uq0zj169CkhqEI7hb2uYOZQnA2cx/GQHjeOFRP0qcHOQe9phLFyCAeBckwc3C1hxDgYchBJEZaYSIgcHpVHE1bRpAzxulUKDuzrCUoVcPOVLCo9t0fjUOGw7k4qaxxyduPPShzQkx8xcHDCOykyZ4zBwysHJnFwEXN4pZhHAmeGeXuFi6UI8Uwx2SuYNn9W6LbXHJM5rUtpFZM9hxCi/P7V7i4LpvYc1oVrMBDOQTVGyKmGwX7dJ6bnqNHwKaCuGbYcFSM3Topb1G0frjkrmLTQzSNpVMVZwaQSjbqYERNBZ0dlE0bpwYKNFgt+BeNKDF/HlF3YXcdYzgn/iklNSRZd9I3YL23RsKp8eHwKfhdDqhh/X/APYVDX11JMC0cBCYOcu7t3dzDUv2tuYGDh0CbmJr2Llw60Ixd/DWO9+3FbnfYobg1mNDFdRufyfrSmzLFodoFGYoPo+a9jVS+3Nw2jSs30KQAAAABJRU5ErkJggg=='; // 非图像文件预览的base64编码
 
@@ -232,7 +232,7 @@
                     isChecked = true;
                     $(this).removeClass('unchecked').addClass('checked');
                 }
-                that.files.forEach(function(item) { 
+                that.files.forEach(function(item) {
                     item.checked = isChecked;
                     if (!item.checked && item.uploadStatus == 'loading') {
                         item.uploadStatus = 'waiting';
@@ -425,10 +425,10 @@
                 var that = this,
                     hasChecked = false,
                     checkedWaitingFiles = [];
-                that.files.forEach(function(item) { 
+                that.files.forEach(function(item) {
                     if (item.checked) {
                         hasChecked = true;
-                        if (item.uploadStatus == 'waiting' || (item.uploadStatus == 'loading' && item.uploadPercentage==0)) { 
+                        if (item.uploadStatus == 'waiting' || (item.uploadStatus == 'loading' && item.uploadPercentage==0)) {
                             checkedWaitingFiles.push(item);
                         }
                     }
@@ -452,14 +452,15 @@
                             this.configs.data = new FormData();
                             this.configs.data.append(this.configs.name, this.files[this.ajax.index].file);
                         } else {
-                            this.configs.data = {}; /* 设为空对象便于在beforeUpload钩子中配置 */
+                            this.configs.data = {}; /* 设为空对象便于在beforeUpload回调函数中配置 */
                         }
                         this.ajax.example = $.ajax({
                             url: that.configs.action,
                             type: "POST",
-                            headers: that.configs.headers,
+                            contentType: false,
                             data: that.configs.data,
                             dataType: that.configs.dataType,
+                            headers: that.configs.headers,
                             processData: that.configs.processData,
                             timeout: that.configs.timeout,
                             xhr: function () {
@@ -495,7 +496,7 @@
                         });
                     }
 
-                } 
+                }
             }
         }
     };

@@ -1,6 +1,6 @@
 # easyUpload.js
-V2.0 以后更名为 easyUploader.js，是一款简单易用 H5 上传插件，主要面向小文件，支持多文件上传，批量上传，以及混合上传  
-![easyUploader](/example/01.jpg)  
+V2.0 以后更名为 easyUploader.js，是一款简单易用 H5 上传插件，主要面向小文件，支持多文件上传，批量上传，以及混合上传
+![easyUploader](/example/01.jpg)
 [试一试](http://www.jq22.com/jquery-info17836)
 
 ## 支持
@@ -69,21 +69,23 @@ V2.0 以后更名为 easyUploader.js，是一款简单易用 H5 上传插件，�
             onSuccess: function(res) {
                 console.log('onSuccess', res);
 
-                /* 通过实例的files属性可以访问上传文件 */
-                var files = uploader.files;
-                console.log('files', files);
-        
-                /*
-                    files中各个字段值表示意思如下
-                    ajaxResponse: ajax的的响应结果
-                    base: 文件的base64编码
-                    checked: 该文件是否被选中
-                    file: 文件对象
-                    id: 插件内部标识的文件id
-                    isImg: 插件内部标识文件时否是图片
-                    previewBase: 文件压缩后的base64编码，用于插件内部展示预览图
-                    uploadPercentage: 文件上传进度百分比值
-                    uploadStatus: 文件上传状态
+                /**
+                 * 注意，接口调通不代表视图会展示成功，接口调通时视图要展示成功需要满足以下两点条件
+                 * 1. 返回数据必须由对象包裹，如 { code: 200, data: null }
+                 * 2. 必须有一个用于标识成功状态的属性，默认属性是code，默认成功属性值是200，配置项分别对应successKey和successValue，可视情况自行配置
+                 */
+
+                /**
+                 * 可以在onSuccess/onError等回调函数中通过实例的files属性可以访问上传文件，如 var files = uploader.files; console.log一下就会发现files数组中每个元素由以下属性构成
+                 * 1. ajaxResponse: ajax的的响应结果
+                 * 2. base: 文件的base64编码
+                 * 3. checked: 该文件是否被选中
+                 * 4. file: 文件对象
+                 * 5. id: 插件内部标识的文件id
+                 * 6. isImg: 插件内部标识文件时否是图片
+                 * 7. previewBase: 文件压缩后的base64编码，用于插件内部展示预览图
+                 * 8. uploadPercentage: 文件上传进度百分比值
+                 * 9. uploadStatus: 文件上传状态
                 */
             },
             onError: function(err) {
@@ -98,39 +100,39 @@ V2.0 以后更名为 easyUploader.js，是一款简单易用 H5 上传插件，�
 ## 参数配置
 ```
 defaultConfigs = {
-  id: "", /* 渲染容器id */
-  accept: '.jpg,.png', /* 上传类型 */
-  action: "", /* 上传地址 */
-  autoUpload: false, /* 是否开启自动上传 */
-  crossDomain: true, /* 是否允许跨域 */
-  data: null, /* 上传配置参数，依据dataFormat而不同， */
-  dataFormat: 'formData', /* 上传表单类型，有formData和base64两种 */
-  dataType: 'json', /* 同$.ajax，默认返回数据格式为json */
-  headers: {
-      contentType: 'application/x-www-form-urlencoded', /* 默认为此contentType配置 */
-  }, /* 上传的请求头部 */
-  maxCount: 3, /* 最大上传文件数 */
-  maxSize: 3, /* 最大上传文件体积，单位M */
-  multiple: false, /* 是否开启多选上传 */
-  name: 'file', /* 上传的文件字段名 */
-  previewWidth: 70, /* 压缩预览图的宽度，样式中高度等于宽度 */
-  processData: false, /* 同$.ajax参数，这里默认为false */
-  successKey: 'code', /* 标识上传成功的key */
-  successValue: 200, /* 标识上传成功对应的value */
-  showAlert: true, /* 是否开启alert提示 */
-  timeout: 0, /* ajax请求超时时间，默认值为0，表示永不超时*/
-  withCredentials: true, /* 是否支持发送 cookie 凭证信息 */
-  beforeUpload: null, /* ajax上传前的钩子 */
-  onAlert: null, /* alert时的钩子 */
-  onChange: null, /* input change的回调函数 */
-  onError: null, /* 上传失败时的钩子 */
-  onRemove: null, /* 移除文件时的钩子 */
-  onSuccess: null, /* 上传成功时的钩子 */
+   id: "", /* 渲染容器id */
+   accept: '.jpg,.png', /* 上传类型 */
+   action: "", /* 上传地址 */
+   autoUpload: false, /* 是否开启自动上传 */
+   crossDomain: true, /* 是否允许跨域 */
+   data: null, /* 上传配置参数，依据dataFormat而不同， */
+   dataFormat: 'formData', /* 上传表单类型，有formData和base64两种 */
+   dataType: 'json', /* 同$.ajax，默认返回数据格式为json */
+   headers: {
+    // testKey: 'testValue'
+   }, /* 上传的请求头部，视需要配置 */
+   maxCount: 3, /* 最大上传文件数 */
+   maxSize: 3, /* 最大上传文件体积，单位M */
+   multiple: false, /* 是否开启多选上传 */
+   name: 'file', /* 上传的文件字段名 */
+   previewWidth: 70, /* 压缩预览图的宽度，样式中高度等于宽度 */
+   processData: false, /* 同$.ajax参数，这里默认为false */
+   successKey: 'code', /* 标识上传成功的key */
+   successValue: 200, /* 标识上传成功对应的value */
+   showAlert: true, /* 是否开启alert提示 */
+   timeout: 0, /* ajax请求超时时间，默认值为0，表示永不超时*/
+   withCredentials: true, /* 是否支持发送 cookie 凭证信息 */
+   beforeUpload: null, /* ajax上传前的回调函数 */
+   onAlert: null, /* alert时的回调函数 */
+   onChange: null, /* input change的回调函数 */
+   onError: null, /* 上传失败时的回调函数 */
+   onRemove: null, /* 移除文件时的回调函数 */
+   onSuccess: null, /* 上传成功时的回调函数 */
 }
 ```
 
 ## 当前版本
-V2.0.2  (update at 2019-03-17)
+V2.0.3  (update at 2019-04-13)
 
 ## 版本说明
 easyUpload.js V2.0 版本升级以后更名 easyUploader.js ，相对于V1版本体积更小，性能更佳，配置也更加灵活，欢迎新老朋友与我交流，或者给以反馈
