@@ -61,7 +61,7 @@
             index: 0, /*用于接收最近一个等待上传文件的索引 */
         },
         initPlugin: function (configs) {
-            this.configs = Object.assign({}, defaultConfigs, configs);
+            this.configs = this.assignObject({}, defaultConfigs, configs);
             var container = document.getElementById(this.configs.id);
             if (!container) {
                 alert("没有找到id为" + this.configs.id + "的渲染容器");
@@ -71,6 +71,13 @@
                 this.bindHeadEvent();
             }
             this.startInterceptor(); /* 启动拦截器 */
+        },
+        assignObject: function (target, source1, source2) {
+          target = source1; /* 简单复制地址，严谨来说应该是做深度拷贝处理 */
+          Object.keys(source2).forEach(function(key) {
+            if (target[key] != undefined) { target[key] = source2[key] }
+          });
+          return target;
         },
         buildUploader: function() {
             var html = '';
