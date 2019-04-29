@@ -132,7 +132,7 @@ defaultConfigs = {
 ```
 
 ## 当前版本
-V2.0.3  (update at 2019-04-13)
+V2.0.4  (update at 2019-04-29)
 
 ## 版本说明
 easyUpload.js V2.0 版本升级以后更名 easyUploader.js ，相对于V1版本体积更小，性能更佳，配置也更加灵活，欢迎新老朋友与我交流，或者给以反馈

@@ -2,7 +2,7 @@
  * @author  funnyque@163.com (github:https://github.com/funnyque/easyUpload.js) (qq:1016981640)
  * @param   configs(required)
  * @return  Xhr object
- * @version 2.0.3
+ * @version 2.0.4
  * @description js小文件上传插件，支持多文件上传、批量上传及混合上传
  */
 ;(function(window, document) {
@@ -243,7 +243,7 @@
                 that = this;
             $(".btn-delete-item").off("click").on("click", function () {
                 id = $(this).parent().attr('id');
-                if (that.files[that.ajax.index].id == id && that.files[that.ajax.index].uploadStatus == 'loading') {
+              if ((that.files[that.ajax.index] && that.files[that.ajax.index].id == id) && that.files[that.ajax.index].uploadStatus == 'loading') {
                     var message = '正在上传，请稍后操作';
                     if (that.configs.showAlert) { alert(message); }
                     that.configs.onAlert && that.configs.onAlert(message);
@@ -384,13 +384,13 @@
                                 onAlert(message);
                             }
                         } else {
-                            if (countDiff > 0 && fileSize > that.configs.maxCount) {
+                            if (countDiff > 0 && fileSize > that.configs.maxSize) {
                                 message = '文件数量超出，文件大小超出；当前文件' + fileSize + 'M，允许大小为' + that.configs.maxSize + 'M';
                                 onAlert(message);
-                            } else if (countDiff > 0 && fileSize <= that.configs.maxCount) {
+                            } else if (countDiff > 0 && fileSize <= that.configs.maxSize) {
                                 message = '文件数量超出';
                                 onAlert(message);
-                            } else if (countDiff <= 0 && fileSize > that.configs.maxCount) {
+                            } else if (countDiff <= 0 && fileSize > that.configs.maxSize) {
                                 message = '文件大小超出，当前文件' + fileSize + 'M，允许大小为' + that.configs.maxSize + 'M';
                                 onAlert(message);
                             }
