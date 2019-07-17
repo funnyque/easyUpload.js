@@ -78,7 +78,7 @@
         assignObject: function (target, source1, source2) {
           target = source1; /* 简单复制地址，严谨来说应该是做深度拷贝处理 */
           Object.keys(source2).forEach(function(key) {
-            if (target[key] != undefined) { target[key] = source2[key] }
+            if (target[key] !== undefined) { target[key] = source2[key] }
           });
           return target;
         },
