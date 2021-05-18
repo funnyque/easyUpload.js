@@ -11,9 +11,9 @@
         maxCount: 3, //最大文件数量，Number类型
         maxSize: 3, //最大文件尺寸，Number类型
         multiple: true, //是否开启多文件上传，Boolean类型
-        messageTime: 2000, //messageBox消息提示毫秒数，Mumber类型
+        messageTime: 2000, //messageBox消息提示毫秒数，Number类型
         responseType: 'text', //xhr的responseType格式，String类型
-        showSize: true, //是否展示文件尺寸，Number类型
+        showSize: true, //是否展示文件尺寸，Boolean类型
         timeout: 0, //请求超时毫秒数，0表示永久，Number类型
         withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
         setRequestHeader: null, //配置xhr请求头的方法
