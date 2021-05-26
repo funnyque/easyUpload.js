@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./easy_upload.css">
+    <title>easyUpload.js</title>
+    <link rel="stylesheet" href="./easy_upload.min.css">
 </head>
 <body>
     <div id="easy1" class="easy-upload">
@@ -41,13 +41,14 @@
             </li>
         </ul> -->
     </div>
-    <!-- <div id="easy2" class="easy-upload" style="margin-top: 30px;">
-    </div> -->
-    <script src="./easyUpload.js"></script>
+    <div id="easy2" class="easy-upload" style="margin-top: 30px;">
+    </div>
+    <script src="./easyUpload.min.js"></script>
     <script>
         easyUpload({
             easyId: 'easy1',
             action: 'https://jsonplaceholder.typicode.com/posts/',
+            accept: '.jpg,.png,.gif,.docx',
             maxSize: 0.5,
             setRequestHeader: function(xhr) {
                 xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
@@ -71,30 +72,31 @@
         });
 
         //创建另个一实例如下
-        // easyUpload({
-        //     easyId: 'easy2',
-        //     action: 'https://jsonplaceholder.typicode.com/posts/',
-        //     maxSize: 1,
-        //     setRequestHeader: function(xhr) {
-        //         xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-        //     },
-        //     buildSendData: function(file) {
-        //         // var formData = new FormData(); // 发送格式为formData时
-        //         // formData.append('name', file.file)
-        //         // return formData;
+        easyUpload({
+            easyId: 'easy2',
+            action: 'https://jsonplaceholder.typicode.com/posts/',
+            accept: '.jpg,.png,.gif,.docx',
+            maxSize: 3,
+            setRequestHeader: function(xhr) {
+                xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            },
+            buildSendData: function(file) {
+                // var formData = new FormData(); // 发送格式为formData时
+                // formData.append('name', file.file)
+                // return formData;
 
-        //         // return file.base64; //发送格式为base64时
+                // return file.base64; //发送格式为base64时
 
-        //         return null; //发送空数据，用于测试
-        //     },
-        //     checkSuccessCode: function(xhr) {
-        //         if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
-        //             return false;
-        //         } else {
-        //             return true;
-        //         }
-        //     }
-        // });
+                return null; //发送空数据，用于测试
+            },
+            checkSuccessCode: function(xhr) {
+                if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 # easyUpload.js
 **一款简单简单易用、可配置的H5文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**
 
-![实例图片](https://ftp.bmp.ovh/imgs/2021/05/951c87da9be138ed.png)
+![实例图片](https://ftp.bmp.ovh/imgs/2021/05/b6db5c22b4ae49b3.png)
+「 [点我试一试](https://funnyque.github.io/easyUpload.js/) 」
 
 ## 特性
 - *文件类型可配置*
@@ -19,7 +20,7 @@
 
 ## 使用说明
 1. html页面内引入easyUpload.js和easy_upload.css，简单配置后即可使用
-2. 生产环境建议用product文件夹内压缩代码，开发测试建议beta文件夹内原生代码
+2. 生产环境建议用dist文件夹内压缩代码，开发测试建议src文件夹内源代码
 
 ## 配置说明
 ```js
@@ -27,6 +28,7 @@
 easyUpload({
    easyId: 'easy1',
    action: 'https://jsonplaceholder.typicode.com/posts/',
+   accept: '.jpg,.png,.gif,.pdf,.docx',
    maxSize: 0.5,
    setRequestHeader: function(xhr) {
        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
@@ -53,26 +55,56 @@ easyUpload({
 ## 参数说明
 ```js
 // 以下为默认配置，重新配置后将覆盖
-var defaultConfigs = {
-  easyId: '', //插件插入节点的Id，String类型
-  accept: '.jpg,.png,.pdf', //允许文件类型后缀名，逗号分隔，String类型
-  action: '', //上传文件地址，String类型
-  maxCount: 3, //最大文件数量，Number类型
-  maxSize: 3, //最大文件尺寸，Number类型
-  multiple: true, //是否开启多文件上传，Boolean类型
-  messageTime: 2000, //messageBox消息提示毫秒数，Number类型
-  responseType: 'text', //xhr的responseType格式，String类型
-  showSize: true, //是否展示文件尺寸，Boolean类型
-  timeout: 0, //请求超时毫秒数，0表示永久，Number类型
-  withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
-  setRequestHeader: null, //配置xhr请求头的方法
-  buildSendData: null, //配置xhr发送数据格式的方法，返回data
-  checkSuccessCode: null //检查成功状态码的方法，返回布尔值
-};
+ var defaultConfigs = {
+     easyId: '', //插件插入节点的Id，String类型
+     accept: '.jpg,.png,.pdf', //允许文件类型后缀名，逗号分隔，String类型
+     action: '', //上传文件地址，String类型
+     btnText: {  //按钮展示文字
+         select: '选择文件',
+         upload: '上传',
+         delete: '删除',
+         cancel: '终止'
+     },
+     maxCount: 3, //插件单次添加文件的最大数量，Number类型
+     maxSize: 3, //允许上传文件的最大体积，单位M，Number类型
+     multiple: true, //是否开启多文件上传，Boolean类型
+     messageTime: 2000, //messageBox消息提示毫秒数，Number类型
+     responseType: 'text', //xhr的responseType格式，String类型
+     showSize: true, //是否展示文件尺寸，Boolean类型
+     statusText: {  //不同状态展示的提示文字，key为对应文件状态(不可修改)，value为展示文字
+         0: '允许上传', //文件大小验证合格后的初始状态
+         1: '即将上传', //等待上传队列执行到自己时的状态
+         2: '0%',      //上传时刚发出xhr还没响应时的状态
+         3: '上传成功',  //xhr响应&上传成功时的状态
+         4: '上传失败',  //xhr响应&上传失败时的状态
+         5: '体积超出',  //检测文件大小超出限定值时的状态
+     },
+     statusTextColor: {  //不同状态'提示文字'标签的className，key为对应文件状态(不可修改)，value为标签的className
+         0: 'normalcolor',  //正常状态字体色的className
+         1: 'normalcolor',  //正常状态字体色的className
+         2: 'normalcolor',  //正常状态字体色的className
+         3: 'normalcolor',  //正常状态字体色的className
+         4: 'failedcolor',  //失败状态字体色的className
+         5: 'warncolor',    //警告状态字体色的className
+     },
+     statusBg: {  //不同状态对应标签的className，key为对应文件状态(不可修改)，value为标签的className
+         0: 'normalbg',  //正常状态背景色的className
+         1: 'normalbg',  //正常状态背景色的className
+         2: 'normalbg',  //正常状态背景色的className
+         3: 'normalbg',  //正常状态背景色的className
+         4: 'failedbg',  //失败状态背景色的className
+         5: 'warnbg',    //警告状态背景色的className
+     },
+     timeout: 0, //请求超时毫秒数，0表示永久，Number类型
+     withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
+     setRequestHeader: null, //配置xhr请求头的方法
+     buildSendData: null, //配置xhr发送数据格式的方法，返回data
+     checkSuccessCode: null //检查成功状态码的方法，返回布尔值
+ };
 ```
 
 ## 欢迎交流及支持
-*qq: 1016981640*
+*WeChat: qqyun686（务必备注）*
 
 <center class="half">
     <img src="https://ftp.bmp.ovh/imgs/2021/05/b870caa8aa907479.jpg" width="150" style="margin-right: 50px"/>

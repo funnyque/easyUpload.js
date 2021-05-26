@@ -1,0 +1,26 @@
+{
+  "name": "easyUpload",
+  "version": "1.0.0",
+  "description": "**一款简单简单易用、可配置的H5文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist && mkdir dist",
+    "postbuild": "echo 压缩打包成功",
+    "build": "uglifyjs ./src/easyUpload.js -o ./dist/easyUpload.min.js & uglifycss ./src/easy_upload.css > ./dist/easy_upload.min.css & npm run copy",
+    "copy": "cp -f ./src/index.html ./index.html & cp -f ./src/index.html ./dist/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/funnyque/easyUpload.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/funnyque/easyUpload.js/issues"
+  },
+  "homepage": "https://github.com/funnyque/easyUpload.js#readme",
+  "dependencies": {
+    "uglify-js": "^3.13.7"
+  }
+}
