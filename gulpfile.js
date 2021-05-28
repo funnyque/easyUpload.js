@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var minify = require('gulp-minify-css');
 var rename = require('gulp-rename');
-var replace = require('gulp-replace');
+var ejs = require('gulp-ejs');
 
 function minifyCss(cb) {
     gulp.src('./src/easy_upload.css')
@@ -18,19 +18,25 @@ function minifyJs(cb) {
     .pipe(gulp.dest('./dist'));
     cb();
 }
-function repDist (cb) {
-    gulp.src('./src/index.html')
-    .pipe(replace(/\.\/easyUpload.js/, './easyUpload.min.js'))
-    .pipe(replace(/\.\/easy_upload.css/, './easy_upload.min.css'))
-    .pipe(gulp.dest('./dist'));
+function doEjs(obj, dir, cb) {
+    gulp.src('./src/template.html')
+    .pipe(ejs({ 
+        css: obj.css,
+        script: obj.script
+    }))
+    .pipe(rename({ basename: 'index' }))
+    .pipe(gulp.dest(dir));
     cb();
 }
-function repIndex (cb) {
-    gulp.src('./src/index.html')
-    .pipe(replace(/\.\/easyUpload.js/, './dist/easyUpload.min.js'))
-    .pipe(replace(/\.\/easy_upload.css/, './dist/easy_upload.min.css'))
-    .pipe(gulp.dest('./'));
-    cb();
+function buildHtml(cb) {
+    doEjs({ 
+        css: './easy_upload.min.css',
+        script: './easyUpload.min.js' 
+    }, './dist', cb);
+    doEjs({ 
+        css: './dist/easy_upload.min.css',
+        script: './dist/easyUpload.min.js' 
+    }, './', cb);
 }
 
-exports.default = gulp.series(minifyCss, minifyJs, repDist, repIndex);
+exports.default = gulp.series(minifyCss, minifyJs, buildHtml);

@@ -1,5 +1,5 @@
 # easyUpload.js
-**一款简单简单易用、可配置的H5文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**
+**一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**
 
 ![实例图片](https://ftp.bmp.ovh/imgs/2021/05/b6db5c22b4ae49b3.png)
 「 [点我试一试](https://funnyque.github.io/easyUpload.js/) 」
@@ -19,8 +19,8 @@
 - *原生js编写，不依赖任何类库*
 
 ## 使用说明
-1. html页面内引入easyUpload.js和easy_upload.css，简单配置后即可使用
-2. 生产环境建议用dist文件夹内压缩代码，开发测试建议src文件夹内源代码
+1. html页面内引入easyUpload.min.js和easy_upload.min.css，简单配置后即可使用
+2. 生产环境建议使用dist文件夹内压缩代码，二次开发测试可参考src文件夹内源代码
 
 ## 配置说明
 ```js

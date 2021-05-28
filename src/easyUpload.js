@@ -1,7 +1,7 @@
 /**
  * @author https://github.com/funnyque/easyUpload.js; WeChat:qqyun686
- * @version V3.0.0
- * @description 一款简单易用的H5文件上传插件，支持样式自定义，支持数据可配置，支持多实例上传...
+ * @version V3.0.1
+ * @description 一款简单易用的H5/Web文件上传插件，支持样式自定义，支持数据可配置，支持多实例上传...
  */
 ;(function (window, document) {
     var defaultConfigs = {
@@ -208,10 +208,10 @@
         document.getElementById(self.configs.easyId).querySelector('.input-file').click();
     }
     function delFiles(self, fileId) {
-        if (self.files.length && !getCheckedCount(self)) {
+        if (self.files.length && !getCheckedCount(self) && fileId==undefined) {
             showMessage(self, {
                 text: '未选中文件',
-                class_name: self.configs.statusBg[3]
+                class_name: self.configs.statusBg[5]
             })
             return;
         }
