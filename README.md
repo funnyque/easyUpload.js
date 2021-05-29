@@ -48,6 +48,14 @@ easyUpload({
        } else {
            return true;
        }
+   },
+   uploadStart: function(self) {
+      // 文件队列上传前的钩子函数，传入唯一参数'self'是当前插件实例
+      console.log('上传开始，现在的队列是', self.files)
+   },
+   uploadEnd: function(self) {
+      // 文件队列上传完成后的钩子函数，传入唯一参数'self'是当前插件实例
+      console.log('上传完成了，现在的队列是', self.files)
    }
 });
 ```
@@ -100,7 +108,9 @@ easyUpload({
      withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
      setRequestHeader: null, //配置xhr请求头的方法
      buildSendData: null, //配置xhr发送数据格式的方法，返回data
-     checkSuccessCode: null //检查成功状态码的方法，返回布尔值
+     checkSuccessCode: null, //检查成功状态码的方法，返回布尔值
+     uploadStart: null, //每个文件队列上传前的钩子函数，调用时传入easyUpload实例
+     uploadEnd: null //每个文件队列上传完成后的钩子函数，调用时传入easyUpload实例
  };
 ```
 
