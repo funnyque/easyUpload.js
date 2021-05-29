@@ -19,7 +19,8 @@
         multiple: true, //是否开启多文件上传，Boolean类型
         messageTime: 2000, //messageBox消息提示毫秒数，Number类型
         responseType: 'text', //xhr的responseType格式，String类型
-        showSize: true, //是否展示文件尺寸，Boolean类型
+        showSize: true, //是否展示文件体积，Boolean类型
+        showLoading: false, //是否展示上传loading动画，Boolean类型
         statusText: {  //不同状态展示的提示文字，key为对应文件状态(不可修改)，value为展示文字
             0: '允许上传', //文件大小验证合格后的初始状态
             1: '即将上传', //等待上传队列执行到自己时的状态
@@ -65,6 +66,10 @@
     function render(self) {
         var easyTemplate = 
             '<span class="message-box">我是message</span>' +
+            '<div class="loading">' +
+                '<div class="loading-icon"></div>' +
+                '<div class="loading-mask"></div>' +
+            '</div>' +
             '<input type="file" name="file" class="input-file"'+ (self.configs.multiple ? 'multiple': '') +' accept="'+ self.configs.accept +'">' +
             '<div class="btn-list">' +
                 '<div btntype="select" class="btn btn-list-item btnlist-item-selsct">'+ self.configs.btnText.select +'</div>' +
@@ -143,6 +148,7 @@
             function pushFile(obj) {
                 if (self.files.length < self.configs.maxCount) {
                     self.files.push(obj);
+                    self.fileId++;
                 } else {
                     showMessage(self, {
                         text: '文件数量超出',
@@ -174,7 +180,6 @@
                         i++;
                         buildFile();
                     }
-                    self.fileId++;
                 } else {
                     checkAll(self);
                     renderList(self);
@@ -344,6 +349,10 @@
         }
         reader.readAsDataURL(file);
     }
+    function showLoading(self, isShow) {
+        var tag = document.getElementById(self.configs.easyId).querySelector('.loading');
+        tag.style.display = isShow ? 'block' : 'none';
+    }
     function showMessage(self, obj) {
         var tag = document.getElementById(self.configs.easyId).querySelector('.message-box');
         tag.className = 'message-box ' + obj.class_name;
@@ -373,6 +382,7 @@
         if(self.isXhrReady) {
             var i = 0;
             self.isXhrReady = false;
+            self.configs.showLoading && showLoading(self, true);
             function upload() {
                 self.xhrFiles[i].status = 2;
                 setStatus(self);
@@ -425,6 +435,7 @@
                 } else {
                     self.xhrFiles = [];
                     i = 0;
+                    self.configs.showLoading && showLoading(self, false);
                 }
             }
         }

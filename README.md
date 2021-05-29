@@ -70,7 +70,8 @@ easyUpload({
      multiple: true, //是否开启多文件上传，Boolean类型
      messageTime: 2000, //messageBox消息提示毫秒数，Number类型
      responseType: 'text', //xhr的responseType格式，String类型
-     showSize: true, //是否展示文件尺寸，Boolean类型
+     showSize: true, //是否展示文件体积，Boolean类型
+     showLoading: false, //是否展示上传loading动画，Boolean类型
      statusText: {  //不同状态展示的提示文字，key为对应文件状态(不可修改)，value为展示文字
          0: '允许上传', //文件大小验证合格后的初始状态
          1: '即将上传', //等待上传队列执行到自己时的状态
