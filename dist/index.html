@@ -68,6 +68,14 @@
                 } else {
                     return true;
                 }
+            },
+            uploadStart: function (self) {
+                // 文件队列上传前的钩子函数，传入唯一参数'self'是当前插件实例
+                console.log('上传开始，现在的队列是', self.files)
+            },
+            uploadEnd: function (self) {
+                // 文件队列上传完成后的钩子函数，传入唯一参数'self'是当前插件实例
+                console.log('上传完成了，现在的队列是', self.files)
             }
         });
 
@@ -96,6 +104,14 @@
                 } else {
                     return true;
                 }
+            },
+            uploadStart: function(self) {
+                // 文件队列上传前的钩子函数，传入唯一参数'self'是当前插件实例
+                console.log('上传开始，现在的队列是', self.files)
+            },
+            uploadEnd: function(self) {
+                // 文件队列上传完成后的钩子函数，传入唯一参数'self'是当前插件实例
+                console.log('上传完成了，现在的队列是', self.files)
             }
         });
     </script>

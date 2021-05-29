@@ -49,7 +49,9 @@
         withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
         setRequestHeader: null, //配置xhr请求头的方法
         buildSendData: null, //配置xhr发送数据格式的方法，返回data
-        checkSuccessCode: null //检查成功状态码的方法，返回布尔值
+        checkSuccessCode: null, //检查成功状态码的方法，返回布尔值
+        uploadStart: null, //每个文件队列上传前的钩子函数，调用时传入easyUpload实例
+        uploadEnd: null //每个文件队列上传完成后的钩子函数，调用时传入easyUpload实例
     };
     function EasyUpload(configs) {
         var self = this instanceof EasyUpload ? this : Object.create(EasyUpload.prototype);
@@ -167,7 +169,7 @@
                         status: 0,
                         progress: '0%',
                         file: _this.files[i]
-                    }
+                    };
                     if (/image\//.test(_this.files[i].type)) {
                         readImg(_this.files[i], function (base64) {
                             obj.base64 = base64;
@@ -183,6 +185,7 @@
                 } else {
                     checkAll(self);
                     renderList(self);
+                    _this.value = [];
                 }
             }
             buildFile();
@@ -382,6 +385,7 @@
         if(self.isXhrReady) {
             var i = 0;
             self.isXhrReady = false;
+            self.configs.uploadStart && self.configs.uploadStart(self);
             self.configs.showLoading && showLoading(self, true);
             function upload() {
                 self.xhrFiles[i].status = 2;
@@ -436,6 +440,7 @@
                     self.xhrFiles = [];
                     i = 0;
                     self.configs.showLoading && showLoading(self, false);
+                    self.configs.uploadEnd && self.configs.uploadEnd(self);
                 }
             }
         }
