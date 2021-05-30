@@ -8,73 +8,45 @@
     <link rel="stylesheet" href="./dist/easy_upload.min.css">
 </head>
 <body>
-    <div id="easy1" class="easy-upload">
-        <!-- <span class="message-box">没有选中有效文件</span>
-        <input type="file" name="file" inputid="easy1" class="input-file" multiple accept=".jpg,.npg,pdf">
-        <div class="btn-list">
-            <div btntype="select" class="btn btn-list-item">选择文件</div>
-            <div btntype="upload" class="btn btn-list-item">上传</div>
-            <div btntype="delselect" class="btn btn-list-item">删除</div>
-            <div btntype="cancel" class="btn btn-list-item">取消上传</div>
-            <div btntype="checkall" class="btn btn-list-item checkbox checked">✓</div>
-        </div>
-        <ul class="file-list">
-            <li class="file-list-item">
-                <div class="preview">
-                    <div class="preview-img"></div>
-                </div>
-                <div class="btn-file">
-                    <div btntype="delone" class="btn btn-file-del">
-                        <span btntype="delone" class="btn-file-del-text">X</span>
-                    </div>
-                    <div btntype="checkone" class="btn btn-file-checkbox checkbox checked">✓</div>
-                </div>
-                <div class="fileinfo">
-                    <p class="fileinfo-text">
-                        <span class="fileinfo-text-name">测试文件文件测试文件测试文件文件测件测试文件文件测件测试文件文件测件测试文件文件测试文件测试文件文件测试文测试文件测试文件文件测试文测试文件测试文件文件测试文测试文件测试文件文件测试文测试文件测试文件文件测试文件测试文件文件测试文件测试文件文件测试文件</span>
-                        <span class="fileinfo-text-status">100%</span>
-                    </p>
-                    <div class="fileinfo-progress">
-                        <div class="fileinfo-progress-bar"></div>
-                    </div>
-                </div>
-            </li>
-        </ul> -->
-    </div>
-    <div id="easy2" class="easy-upload" style="margin-top: 30px;">
-    </div>
+    <div id="easy1" class="easy-upload"></div>
+    <div id="easy2" class="easy-upload" style="margin-top: 30px;"></div>
     <script src="./dist/easyUpload.min.js "></script>
     <script>
         easyUpload({
             easyId: 'easy1',
             action: 'https://jsonplaceholder.typicode.com/posts/',
             accept: '.jpg,.png,.gif,.docx',
-            maxSize: 0.5,
+            maxSize: 1, //单位MB
+            showLoading: true,
             setRequestHeader: function(xhr) {
                 xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
             },
-            buildSendData: function(file) {
+            setRequestHeader: function (xhr) {
+                xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+                //和原生xhr配置api保持一致
+            },
+            buildSendData: function (file) {
                 // var formData = new FormData(); // 发送格式为formData时
                 // formData.append('name', file.file)
                 // return formData;
 
                 // return file.base64; //发送格式为base64时
 
-                return null; //发送空数据，用于测试
+                return null; //发送空数据，用于测试。默认return null
             },
-            checkSuccessCode: function(xhr) {
+            checkSuccessCode: function (xhr) {
                 if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
                     return false;
                 } else {
                     return true;
-                }
+                } //默认return tue
             },
             uploadStart: function (self) {
-                // 文件队列上传前的钩子函数，传入唯一参数'self'是当前插件实例
+                // 文件队列上传前的回调函数，传入唯一参数'self'是当前插件实例
                 console.log('上传开始，现在的队列是', self.files)
             },
             uploadEnd: function (self) {
-                // 文件队列上传完成后的钩子函数，传入唯一参数'self'是当前插件实例
+                // 文件队列上传完成后的回调函数，传入唯一参数'self'是当前插件实例
                 console.log('上传完成了，现在的队列是', self.files)
             }
         });
@@ -84,33 +56,34 @@
             easyId: 'easy2',
             action: 'https://jsonplaceholder.typicode.com/posts/',
             accept: '.jpg,.png,.gif,.docx',
-            maxSize: 3,
+            maxSize: 3, //单位MB
             showLoading: true,
-            setRequestHeader: function(xhr) {
+            setRequestHeader: function (xhr) {
                 xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+                //和原生xhr配置api保持一致
             },
-            buildSendData: function(file) {
+            buildSendData: function (file) {
                 // var formData = new FormData(); // 发送格式为formData时
                 // formData.append('name', file.file)
                 // return formData;
 
                 // return file.base64; //发送格式为base64时
 
-                return null; //发送空数据，用于测试
+                return null; //发送空数据，用于测试。默认return null
             },
-            checkSuccessCode: function(xhr) {
+            checkSuccessCode: function (xhr) {
                 if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
                     return false;
                 } else {
                     return true;
-                }
+                } //默认return ture
             },
-            uploadStart: function(self) {
-                // 文件队列上传前的钩子函数，传入唯一参数'self'是当前插件实例
+            uploadStart: function (self) {
+                // 文件队列上传前的回调函数，传入唯一参数'self'是当前插件实例
                 console.log('上传开始，现在的队列是', self.files)
             },
-            uploadEnd: function(self) {
-                // 文件队列上传完成后的钩子函数，传入唯一参数'self'是当前插件实例
+            uploadEnd: function (self) {
+                // 文件队列上传完成后的回调函数，传入唯一参数'self'是当前插件实例
                 console.log('上传完成了，现在的队列是', self.files)
             }
         });

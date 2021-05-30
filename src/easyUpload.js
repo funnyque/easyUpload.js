@@ -49,9 +49,9 @@
         withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
         setRequestHeader: null, //配置xhr请求头的方法
         buildSendData: null, //配置xhr发送数据格式的方法，返回data
-        checkSuccessCode: null, //检查成功状态码的方法，返回布尔值
-        uploadStart: null, //每个文件队列上传前的钩子函数，调用时传入easyUpload实例
-        uploadEnd: null //每个文件队列上传完成后的钩子函数，调用时传入easyUpload实例
+        checkSuccessCode: null, //检查成功状态码的方法，返回布尔值，默认返回true
+        uploadStart: null, //每个文件队列上传前的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
+        uploadEnd: null //每个文件队列上传完成后的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
     };
     function EasyUpload(configs) {
         var self = this instanceof EasyUpload ? this : Object.create(EasyUpload.prototype);
@@ -68,10 +68,11 @@
     function render(self) {
         var easyTemplate = 
             '<span class="message-box">我是message</span>' +
+            (self.configs.showLoading ?
             '<div class="loading">' +
                 '<div class="loading-icon"></div>' +
                 '<div class="loading-mask"></div>' +
-            '</div>' +
+            '</div>' : '') +
             '<input type="file" name="file" class="input-file"'+ (self.configs.multiple ? 'multiple': '') +' accept="'+ self.configs.accept +'">' +
             '<div class="btn-list">' +
                 '<div btntype="select" class="btn btn-list-item btnlist-item-selsct">'+ self.configs.btnText.select +'</div>' +
@@ -369,7 +370,9 @@
         for (var j = 0; j < self.files.length; j++) {
             if (self.files[j].isChecked && (self.files[j].status == 4 || self.files[j].status == 0 || self.files[j].status == 3)) {
                 self.files[j].status = 1;
+                self.files[j].progress = '0%';
                 self.xhrFiles.push(self.files[j]);
+                setProgress(self, { progress: '0%', id: self.files[j].id, status: self.files[j].status });
             }
         }
         if (!self.xhrFiles.length) {
@@ -398,11 +401,7 @@
                 self.xhr.addEventListener('progress', function(data){
                     var progress = String(((data.loaded/data.total)*100).toFixed(2)) + '%';
                     self.xhrFiles[i].progress = progress;
-                    setProgress(self, {
-                        progress: progress,
-                        id: self.xhrFiles[i].id,
-                        status: self.xhrFiles[i].status
-                    });
+                    setProgress(self, { progress: progress, id: self.xhrFiles[i].id, status: self.xhrFiles[i].status });
                 });
                 self.xhr.onreadystatechange = function() {
                     if (self.xhr.readyState == 4) {
