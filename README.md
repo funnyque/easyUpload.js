@@ -1,7 +1,7 @@
 # easyUpload.js
 **一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**
 
-![实例图片](https://ftp.bmp.ovh/imgs/2021/05/b6db5c22b4ae49b3.png)
+![实例图片](https://ftp.bmp.ovh/imgs/2021/05/4ecbddba9a536b7e.png)
 「 [点我试一试](https://funnyque.github.io/easyUpload.js/) 」
 
 ## 特性
@@ -29,9 +29,11 @@ easyUpload({
    easyId: 'easy1',
    action: 'https://jsonplaceholder.typicode.com/posts/',
    accept: '.jpg,.png,.gif,.pdf,.docx',
-   maxSize: 0.5,
+   maxSize: 3, //单位MB
+   showLoading: true,
    setRequestHeader: function(xhr) {
        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+       //和原生xhr配置api保持一致
    },
    buildSendData: function(file) {
        // var formData = new FormData(); // 发送格式为formData时
@@ -40,22 +42,22 @@ easyUpload({
 
        // return file.base64; //发送格式为base64时
 
-       return null; //发送空数据，用于测试
+       return null; //发送空数据，用于测试。默认return null
    },
    checkSuccessCode: function(xhr) {
        if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
            return false;
        } else {
            return true;
-       }
+       } //默认return true
    },
    uploadStart: function(self) {
-      // 文件队列上传前的钩子函数，传入唯一参数'self'是当前插件实例
-      console.log('上传开始，现在的队列是', self.files)
+        // 文件队列上传前的回调函数，传入唯一参数'self'是当前插件实例
+        console.log('上传开始，现在的队列是', self.files)
    },
    uploadEnd: function(self) {
-      // 文件队列上传完成后的钩子函数，传入唯一参数'self'是当前插件实例
-      console.log('上传完成了，现在的队列是', self.files)
+        // 文件队列上传完成后的回调函数，传入唯一参数'self'是当前插件实例
+        console.log('上传完成了，现在的队列是', self.files)
    }
 });
 ```
@@ -74,7 +76,7 @@ easyUpload({
          cancel: '终止'
      },
      maxCount: 3, //插件单次添加文件的最大数量，Number类型
-     maxSize: 3, //允许上传文件的最大体积，单位M，Number类型
+     maxSize: 3, //允许上传文件的最大体积，单位MB，Number类型
      multiple: true, //是否开启多文件上传，Boolean类型
      messageTime: 2000, //messageBox消息提示毫秒数，Number类型
      responseType: 'text', //xhr的responseType格式，String类型
@@ -108,9 +110,9 @@ easyUpload({
      withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
      setRequestHeader: null, //配置xhr请求头的方法
      buildSendData: null, //配置xhr发送数据格式的方法，返回data
-     checkSuccessCode: null, //检查成功状态码的方法，返回布尔值
-     uploadStart: null, //每个文件队列上传前的钩子函数，调用时传入easyUpload实例
-     uploadEnd: null //每个文件队列上传完成后的钩子函数，调用时传入easyUpload实例
+     checkSuccessCode: null, //检查成功状态码的方法，返回布尔值，默认返回true
+     uploadStart: null, //每个文件队列上传前的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
+     uploadEnd: null //每个文件队列上传完成后的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
  };
 ```
 
