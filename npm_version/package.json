@@ -1,0 +1,18 @@
+{
+  "name": "easyupload",
+  "version": "3.0.1",
+  "description": "",
+  "main": "webpack.base.js",
+  "scripts": {
+    "build": "npm install && webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^5.2.6",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.6.0",
+    "webpack-cli": "^4.7.0"
+  }
+}

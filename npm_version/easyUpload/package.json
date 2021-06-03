@@ -1,0 +1,29 @@
+{
+  "name": "easy-upload-js",
+  "version": "3.0.2",
+  "description": "A simple configurable upload plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/funnyque/easyUpload.js.git#master"
+  },
+  "keywords": [
+    "javaScript",
+    "xmlHttpRequest",
+    "base64",
+    "html5",
+    "file-upload",
+    "ajax",
+    "formData",
+    "multiple-upload"
+  ],
+  "author": "funnyque",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/funnyque/easyUpload.js/issues"
+  },
+  "homepage": "https://github.com/funnyque/easyUpload.js/tree/master#readme"
+}
