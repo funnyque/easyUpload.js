@@ -1,0 +1,218 @@
+.easy-upload {
+    padding: 10px;
+    position: relative;
+    border: 1px solid #c0ccda;
+}
+.easy-upload * {
+    margin: 0;
+    padding: 0;
+}
+.easy-upload li {
+    list-style: none;
+}
+.easy-upload .message-box {
+    display: none;
+    max-width: 60%;
+    padding: 10px;
+    color: #fff;
+    border-radius: 5px;
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    overflow: hidden;
+}
+.easy-upload .input-file {
+    display: none;
+}
+.easy-upload .btn {
+    cursor: pointer;
+    user-select: none;
+}
+.easy-upload .btn-list {
+    overflow: hidden;
+}
+.easy-upload .btn-list-item {
+    float: left;
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+}
+.easy-upload .btnlist-item-selsct {
+    color: #409eff;
+    border: 1px #409eff solid;
+}
+.easy-upload .btnlist-item-upload {
+    background-color: #409eff;
+}
+.easy-upload .btnlist-item-danger {
+    background-color: #f00;
+}
+.easy-upload .file-list-item {
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    height: 80px;
+    border: 1px solid #c0ccda;
+    border-radius: 2px;
+}
+.easy-upload .preview {
+    float: left;
+    width: 60px;
+    height: 60px;
+}
+.easy-upload .preview-img {
+    width: 100%;
+    height: 100%;
+}
+.easy-upload .preview-div {
+    width: 100%;
+    height: 100%;
+    /* 视项目情况，可将文件icon的url替换*/
+    background: no-repeat center center url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAMAAABG8BK2AAAAFVBMVEWZmZmZmZmZmZmZmZmZmZmZmZmZmZk9goCmAAAAB3RSTlMC/rYs1mCR8/Hv3QAAAYBJREFUWMPtmMsSwyAIRRWE///kGmMTH6CYtN0012knC+cU4Uq0zj169CkhqEI7hb2uYOZQnA2cx/GQHjeOFRP0qcHOQe9phLFyCAeBckwc3C1hxDgYchBJEZaYSIgcHpVHE1bRpAzxulUKDuzrCUoVcPOVLCo9t0fjUOGw7k4qaxxyduPPShzQkx8xcHDCOykyZ4zBwysHJnFwEXN4pZhHAmeGeXuFi6UI8Uwx2SuYNn9W6LbXHJM5rUtpFZM9hxCi/P7V7i4LpvYc1oVrMBDOQTVGyKmGwX7dJ6bnqNHwKaCuGbYcFSM3Topb1G0frjkrmLTQzSNpVMVZwaQSjbqYERNBZ0dlE0bpwYKNFgt+BeNKDF/HlF3YXcdYzgn/iklNSRZd9I3YL23RsKp8eHwKfhdDqhh/X/APYVDX11JMC0cBCYOcu7t3dzDUv2tuYGDh0CbmJr2Llw60Ixd/DWO9+3FbnfYobg1mNDFdRufyfrSmzLFodoFGYoPo+a9jVS+3Nw2jSs30KQAAAABJRU5ErkJggg==);
+    background-size: 100% auto;
+}
+.easy-upload .loading {
+    display: none;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.easy-upload .loading-mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background:rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+.easy-upload .loading-icon {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    margin-left: 5px;
+    margin-top: 5px;
+    z-index: 10000;
+    /* 视项目情况，可将loading图的url替换*/
+    background: no-repeat center center url(data:image/png;base64,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);
+    background-size: 100% auto;
+    animation: loading-icon 1s linear infinite;     
+}
+@keyframes loading-icon {
+    from {
+        transform: rotate(0deg);
+    } to {
+        transform: rotate(360deg);
+    }
+}
+.easy-upload .fileinfo {
+    box-sizing: border-box;
+    margin-left: 60px;
+    margin-right: 60px;
+    padding: 10px;
+    height: 100%;
+}
+.easy-upload .fileinfo-text {
+    overflow: hidden;
+}
+.easy-upload .fileinfo-text-name {
+    float: left;
+    width: calc(100% - 80px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.easy-upload .fileinfo-text-status {
+    float: right;
+    width: 80px;
+    text-align: right;
+}
+.easy-upload .fileinfo-text-size {
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 0 2px;
+    margin-right: 5px;
+    font-style: normal;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 2px;
+}
+.easy-upload .fileinfo-progress {
+    height: 4px;
+    background-color: #eee;
+}
+.easy-upload .fileinfo-progress-bar {
+    margin-top: 10px;
+    height: 100%;
+    width: 0;
+    background-color: #13ce66;
+}
+.easy-upload .warnbg {
+    background-color: #FF8C00;
+}
+.easy-upload .failedbg {
+    background-color: #f00;
+}
+.easy-upload .normalbg {
+    background-color: #080;
+}
+.easy-upload .warncolor {
+    color: #FF8C00;
+}
+.easy-upload .failedcolor {
+    color: #f00;
+}
+.easy-upload .normalcolor {
+    color: #080;
+}
+.easy-upload .btn-file {
+    float: right;
+    width: 60px;
+    height: 100%;
+    position: relative;
+}
+.easy-upload .btn-file-del {
+    width: 80px;
+    height: 30px;
+    background-color: #f00;
+    transform: rotate(45deg);
+    position: absolute;
+    left: 15px;
+    top: -20px;
+}
+.easy-upload .btn-file-del-text {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: rotate(-45deg);
+    font-weight: bold;
+    color: #fff;
+}
+.easy-upload .checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 20px;
+}
+.easy-upload .unchecked {
+    color: #fff;
+    border: 2px solid #c0ccda;
+}
+.easy-upload .checked {
+    background: #409eff;
+    color: #fff;
+}
+.easy-upload .btn-file-checkbox {
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}

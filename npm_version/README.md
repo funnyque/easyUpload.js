@@ -1,8 +1,9 @@
-# easyUpload.js
-**一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。共有 [JS版本](https://github.com/funnyque/easyUpload.js) 和 [npm版本](https://github.com/funnyque/easyUpload.js/tree/master/npm_version) 2个版本。**
+# easy-upload-js
+**easy-upload-js是一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**
 
 ![实例图片](https://ftp.bmp.ovh/imgs/2021/05/4ecbddba9a536b7e.png)
-「 [点我试一试](https://funnyque.github.io/easyUpload.js/) 」
+「 [演示](https://funnyque.github.io/easyUpload.js/) | [JS版本](https://github.com/funnyque/easyUpload.js) 」
+
 
 ## 特性
 - *文件类型可配置*
@@ -19,8 +20,15 @@
 - *原生js编写，不依赖任何类库*
 
 ## 使用说明
-1. html页面内引入easyUpload.min.js和easy_upload.min.css，简单配置后即可使用
-2. 生产环境建议使用dist文件夹内压缩代码，二次开发测试可参考src文件夹内源代码
+```js
+import 'easy-upload-js/css/index.css';   //step1, import css
+import easyUpload from 'easy-upload-js'; //step2, import js
+
+easyUpload({ //step3, config easyUpload
+    easyId: 'easy1',
+    other: '...'
+})
+```
 
 ## 配置说明
 ```js
@@ -65,7 +73,7 @@ easyUpload({
 ## 参数说明
 ```js
 // 以下为默认配置，重新配置后将覆盖
- var defaultConfigs = {
+ const defaultConfigs = {
      easyId: '', //插件插入节点的Id，String类型
      accept: '.jpg,.png,.pdf', //允许文件类型后缀名，逗号分隔，String类型
      action: '', //上传文件地址，String类型
