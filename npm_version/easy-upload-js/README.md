@@ -1,7 +1,5 @@
-# easy-upload-js
-**A easy configurable upload plugin. Support multi file upload, batch upload, mixed upload, and multi instance upload**  
-![version](https://img.shields.io/badge/version-3.0.1-informational) ![build](https://img.shields.io/badge/build-passing-brightgreen)
-
+# easy-upload-js ![version](https://img.shields.io/badge/version-3.0.1-informational) ![build](https://img.shields.io/badge/build-passing-brightgreen)
+**A easy configurable upload plugin. Support multi file upload, batch upload, mixed upload, and multi instance upload**
 
 ![demo](https://ftp.bmp.ovh/imgs/2021/05/4ecbddba9a536b7e.png)
 「 [example](https://funnyque.github.io/easyUpload.js/) | [Github](https://github.com/funnyque/easyUpload.js/tree/master/npm_version) 」
