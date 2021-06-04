@@ -1,8 +1,8 @@
-# easyUpload.js
-**一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。共有 [JS版本](https://github.com/funnyque/easyUpload.js) 和 [npm版本](https://github.com/funnyque/easyUpload.js/tree/master/npm_version) 2个版本。**
+# easyUpload.js ![version](https://img.shields.io/badge/version-3.0.1-informational) ![build](https://img.shields.io/badge/build-passing-brightgreen)
+**一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。** easyUpload.js有js和npm两个版本，本版本为js版本。还可「[点我尝试npm版本](https://github.com/funnyque/easyUpload.js/tree/master/npm_version/easy-upload-js)」。
 
 ![实例图片](https://ftp.bmp.ovh/imgs/2021/05/4ecbddba9a536b7e.png)
-「 [点我试一试](https://funnyque.github.io/easyUpload.js/) 」
+「 [点我查看js版本演示](https://funnyque.github.io/easyUpload.js/) 」
 
 ## 特性
 - *文件类型可配置*

@@ -1,131 +1,135 @@
 # easy-upload-js
-**easy-upload-js是一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**
-
-![实例图片](https://ftp.bmp.ovh/imgs/2021/05/4ecbddba9a536b7e.png)
-「 [演示](https://funnyque.github.io/easyUpload.js/) | [JS版本](https://github.com/funnyque/easyUpload.js) 」
+**A easy configurable upload plugin. Support multi file upload, batch upload, mixed upload, and multi instance upload**
+![version](https://img.shields.io/badge/version-3.0.1-informational) ![build](https://img.shields.io/badge/build-passing-brightgreen)
 
 
-## 特性
-- *文件类型可配置*
-- *文件数量可配置*
-- *文件大小可配置*
-- *上传前文件可预览*
-- *展示上传实时进度条*
-- *批量上传*
-- *支持不同类型文件混合上传*
-- *支持自由配置 base64 或 FormData 等数据格式*
-- *支持自由配置请求头等，api保持和原生api一致*
-- *支持自由配置请求成功状态码*
-- *css与结构分离，支持自由定制样式*
-- *原生js编写，不依赖任何类库*
+![demo](https://ftp.bmp.ovh/imgs/2021/05/4ecbddba9a536b7e.png)
+「 [example](https://funnyque.github.io/easyUpload.js/) | [Github](https://github.com/funnyque/easyUpload.js/tree/master/npm_version) 」
 
-## 使用说明
+## Features
+- *Allow profile types*
+- *Allow profile count*
+- *Allow profile size*
+- *Allow preview before upload*
+- *Show real time upload progress*
+- *Allow multiple uploads*
+- *Allow mixed uploads*
+- *Allow configing base64 or FormData*
+- *Allow configing request header，api same as xhr's api*
+- *Allow configing success code*
+- *Allow configing css freely*
+- *Native JS, does not rely on any class library*
+
+## How to use
 ```js
-import 'easy-upload-js/css/index.css';   //step1, import css
-import easyUpload from 'easy-upload-js'; //step2, import js
+// step1: intall
+npm install easy-upload-js
 
-easyUpload({ //step3, config easyUpload
-    easyId: 'easy1',
-    other: '...'
-})
+// step2: import css
+import 'easy-upload-js/css/index.css';
+
+// step3: import plugin
+import easyUpload from 'easy-upload-js';
+
+// step4: config plugin
+easyUpload(configs); // You can read the configs below
 ```
 
-## 配置说明
+## Configs
 ```js
-// easyUpload(configs)
+// easyUpload(configs);
 easyUpload({
    easyId: 'easy1',
    action: 'https://jsonplaceholder.typicode.com/posts/',
    accept: '.jpg,.png,.gif,.pdf,.docx',
-   maxSize: 3, //单位MB
+   maxSize: 3, //MB
    showLoading: true,
    setRequestHeader: function(xhr) {
        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-       //和原生xhr配置api保持一致
+       //same as xhr's api
    },
    buildSendData: function(file) {
-       // var formData = new FormData(); // 发送格式为formData时
+       // var formData = new FormData();
        // formData.append('name', file.file)
        // return formData;
 
-       // return file.base64; //发送格式为base64时
+       // return file.base64;
 
-       return null; //发送空数据，用于测试。默认return null
+       return null; // default return null
    },
    checkSuccessCode: function(xhr) {
-       if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
-           return false;
+       if (/error/.test(xhr.responseText.toLowerCase())) { 
+           return false; // just for test here
        } else {
            return true;
-       } //默认return true
+       } // default return true
    },
    uploadStart: function(self) {
-        // 文件队列上传前的回调函数，传入唯一参数'self'是当前插件实例
-        console.log('上传开始，现在的队列是', self.files)
+        // callback function after upload starts
+        console.log('current upload queue is', self.xhrFiles)
    },
    uploadEnd: function(self) {
-        // 文件队列上传完成后的回调函数，传入唯一参数'self'是当前插件实例
-        console.log('上传完成了，现在的队列是', self.files)
+        // callback function after upload
+        console.log('current upload queue is', self.xhrFiles)
    }
 });
 ```
 
-## 参数说明
+## Params
 ```js
-// 以下为默认配置，重新配置后将覆盖
- const defaultConfigs = {
-     easyId: '', //插件插入节点的Id，String类型
-     accept: '.jpg,.png,.pdf', //允许文件类型后缀名，逗号分隔，String类型
-     action: '', //上传文件地址，String类型
-     btnText: {  //按钮展示文字
+ defaultConfigs = {
+     easyId: '', //plugin's id, String type
+     accept: '.jpg,.png,.pdf', //allowed file types, String type
+     action: '', //upload url, String type
+     btnText: {  //button's text, String type
          select: '选择文件',
          upload: '上传',
          delete: '删除',
          cancel: '终止'
      },
-     maxCount: 3, //插件单次添加文件的最大数量，Number类型
-     maxSize: 3, //允许上传文件的最大体积，单位MB，Number类型
-     multiple: true, //是否开启多文件上传，Boolean类型
-     messageTime: 2000, //messageBox消息提示毫秒数，Number类型
-     responseType: 'text', //xhr的responseType格式，String类型
-     showSize: true, //是否展示文件体积，Boolean类型
-     showLoading: false, //是否展示上传loading动画，Boolean类型
-     statusText: {  //不同状态展示的提示文字，key为对应文件状态(不可修改)，value为展示文字
-         0: '允许上传', //文件大小验证合格后的初始状态
-         1: '即将上传', //等待上传队列执行到自己时的状态
-         2: '0%',      //上传时刚发出xhr还没响应时的状态
-         3: '上传成功',  //xhr响应&上传成功时的状态
-         4: '上传失败',  //xhr响应&上传失败时的状态
-         5: '体积超出',  //检测文件大小超出限定值时的状态
+     maxCount: 3, //allow max file count once, Number type
+     maxSize: 3, //allowed file's size，MB，Number type
+     multiple: true, //allowed multiple files, Booleantype
+     messageTime: 2000, //message's show time, Number type
+     responseType: 'text', //xhr's responseType，String type
+     showSize: true, //show file's size, Boolean type
+     showLoading: false, //show loading animation, Boolean type
+     statusText: {  //text for deferent status
+         0: '允许上传', //size is ok
+         1: '即将上传', //in the upload queue
+         2: '0%',      //wait for xhr's response
+         3: '上传成功',  //xhr response and upload successfully
+         4: '上传失败',  //xhr response and failed upload
+         5: '体积超出',  //file size over
      },
-     statusTextColor: {  //不同状态'提示文字'标签的className，key为对应文件状态(不可修改)，value为标签的className
-         0: 'normalcolor',  //正常状态字体色的className
-         1: 'normalcolor',  //正常状态字体色的className
-         2: 'normalcolor',  //正常状态字体色的className
-         3: 'normalcolor',  //正常状态字体色的className
-         4: 'failedcolor',  //失败状态字体色的className
-         5: 'warncolor',    //警告状态字体色的className
+     statusTextColor: {  //className for statue
+         0: 'normalcolor',  //normal statue
+         1: 'normalcolor',  //normal statue
+         2: 'normalcolor',  //normal statue
+         3: 'normalcolor',  //normal statue
+         4: 'failedcolor',  //failed status
+         5: 'warncolor',    //warning status
      },
-     statusBg: {  //不同状态对应标签的className，key为对应文件状态(不可修改)，value为标签的className
-         0: 'normalbg',  //正常状态背景色的className
-         1: 'normalbg',  //正常状态背景色的className
-         2: 'normalbg',  //正常状态背景色的className
-         3: 'normalbg',  //正常状态背景色的className
-         4: 'failedbg',  //失败状态背景色的className
-         5: 'warnbg',    //警告状态背景色的className
+     statusBg: {  //background color for deferent status
+         0: 'normalbg',  //normal status
+         1: 'normalbg',  //normal status
+         2: 'normalbg',  //normal status
+         3: 'normalbg',  //normal status
+         4: 'failedbg',  //failed status
+         5: 'warnbg',    //warning status
      },
-     timeout: 0, //请求超时毫秒数，0表示永久，Number类型
-     withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
-     setRequestHeader: null, //配置xhr请求头的方法
-     buildSendData: null, //配置xhr发送数据格式的方法，返回data
-     checkSuccessCode: null, //检查成功状态码的方法，返回布尔值，默认返回true
-     uploadStart: null, //每个文件队列上传前的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
-     uploadEnd: null //每个文件队列上传完成后的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
+     timeout: 0, //request timeout milliseconds, 0 means permanent, Number type
+     withCredentials: true, //allow upload cookies and others，Boolean type
+     setRequestHeader: null, //function of how to configure XHR request header
+     buildSendData: null, //function of build sending data，return data
+     checkSuccessCode: null, //function of check success code，defaule return true
+     uploadStart: null, //callback before upload
+     uploadEnd: null //callback after upload
  };
 ```
 
-## 欢迎交流及支持
-*WeChat: qqyun686（务必备注）*
+## Support & Contact
+*WeChat: qqyun686（remark please）*
 
 <center class="half">
     <img src="https://ftp.bmp.ovh/imgs/2021/05/b870caa8aa907479.jpg" width="150" style="margin-right: 50px"/>
