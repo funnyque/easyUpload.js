@@ -1,5 +1,5 @@
 # easy-upload-js
-**A easy configurable upload plugin. Support multi file upload, batch upload, mixed upload, and multi instance upload**
+**A easy configurable upload plugin. Support multi file upload, batch upload, mixed upload, and multi instance upload** 
 ![version](https://img.shields.io/badge/version-3.0.1-informational) ![build](https://img.shields.io/badge/build-passing-brightgreen)
 
 
