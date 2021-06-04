@@ -1,6 +1,6 @@
 {
   "name": "easy-upload-js",
-  "version": "3.0.2",
+  "version": "3.0.1",
   "description": "A easy configurable upload plugin",
   "main": "index.js",
   "scripts": {
