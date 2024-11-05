@@ -236,12 +236,20 @@
     }
     function cancel() {
         var _this = this;
-        for (var i in this.xhrs) {
-            if (this.xhrs[i]) {
-                this.xhrs[i].onabort = function () {
-                    showMsg.call(_this, '成功终止');
-                };
-                this.xhrs[i].abort();
+        this.xhrs.con = 0; // 开始终止的个数时0
+        this.xhrs.cdone = 0; // 终止完成的个数是0
+        for (var k in this.files) {
+            if (this.files[k] !== null && this.files[k]['checked']) {
+                this.xhrs.con++;
+                if (this.xhrs[k]) {
+                    this.xhrs[k].onabort = function () {
+                        _this.xhrs.cdone++;
+                        if (_this.xhrs.con == _this.xhrs.cdone) showMsg.call(_this, '成功终止选中');
+                    };
+                    this.xhrs[k].abort();
+                } else {
+                    _this.xhrs.cdone++;
+                }
             }
         }
     }
@@ -308,7 +316,7 @@
         }
     }
     function showMsg(m) {
-        var n = this.eNode.querySelector('.msg').innerText = m || '操作成功';
+        this.eNode.querySelector('.msg').innerText = m || '操作成功';
     }
     /** 以下为工具函数 */
     function assign(s) {

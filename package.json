@@ -1,7 +1,7 @@
 {
   "name": "easyUpload.js",
-  "version": "3.0.1",
-  "description": "**一款简单简单易用、可配置的H5/Web文件上传插件。支持多文件上传、批量上传、混合上传，以及多实例上传。**",
+  "version": "4.0.0",
+  "description": "**一款简单易用、可配置的H5/Web上传插件，体积仅有8kb (css+js)。支持多文件上传，多实例上传，批量上传，并发上传，混合上传。**",
   "main": "easyUpload.js",
   "scripts": {
     "dev": "npm install && cross-env NODE_ENV=dev grunt & live-server",
