@@ -1,78 +1,55 @@
 import './src/easy_upload.css';
 import easyUpload from './src/easyUpload';
 
-easyUpload({
-    easyId: 'easy1',
-    action: 'https://jsonplaceholder.typicode.com/posts/',
-    accept: '.jpg,.png,.gif,.docx',
-    maxSize: 1, //单位MB
-    showLoading: true,
-    setRequestHeader: function(xhr) {
-        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-    },
-    setRequestHeader: function (xhr) {
-        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-        //和原生xhr配置api保持一致
-    },
-    buildSendData: function (file) {
-        // var formData = new FormData(); // 发送格式为formData时
-        // formData.append('name', file.file)
-        // return formData;
-
-        // return file.base64; //发送格式为base64时
-
-        return null; //发送空数据，用于测试。默认return null
-    },
-    checkSuccessCode: function (xhr) {
-        if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
-            return false;
-        } else {
-            return true;
-        } //默认return tue
-    },
-    uploadStart: function (self) {
-        // 文件队列上传前的回调函数，传入唯一参数'self'是当前插件实例
-        console.log('上传开始，现在的队列是', self.files)
-    },
-    uploadEnd: function (self) {
-        // 文件队列上传完成后的回调函数，传入唯一参数'self'是当前插件实例
-        console.log('上传完成了，现在的队列是', self.files)
-    }
+const easy = new EasyUpload('#easy1', {
+    url: 'https://jsonplaceholder.typicode.com/posts/',
+    naxSize: 5,
+    maxCount: 3,
+    // readAs: 'BinaryString'
 });
+// 本次导入文件数>限定数maxCount时，触发onMax事件
+easy.onMax = function (fs) {
+    // in为本次导入文件数，max为限定文件数
+    console.log('in:' + fs.in, 'max:' + fs.max);
+}
+// 设置XMLHttpRequest实例的请求头
+easy.setHeader = function (xhr) {
+    // 如下：
+    // xhr.setRequestHeader('Content-Type', 'application/json');
+}
+// 自定义上传文件数据格式，未定义此方法时以参数readAs定义格式上传（默认base64格式）
+easy.setData = function (file) {
+    // flie 为文件信息对象，file.source为原始文件对象
+    // console.log(file)
 
-//创建另个一实例如下
-easyUpload({
-    easyId: 'easy2',
-    action: 'https://jsonplaceholder.typicode.com/posts/',
-    accept: '.jpg,.png,.gif,.docx',
-    maxSize: 3, //单位MB
-    showLoading: true,
-    setRequestHeader: function (xhr) {
-        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
-        //和原生xhr配置api保持一致
-    },
-    buildSendData: function (file) {
-        // var formData = new FormData(); // 发送格式为formData时
-        // formData.append('name', file.file)
-        // return formData;
+    // 测试用
+    return 'abcdefg';
+}
+// setFLag用来标识文件成功上传的状态
+easy.setFlag = function () {
+    // return一个结果为true或者false的表达式，用来判断文件是否成功上传到服务器，如下：
+    // return this.status == 200; 
+}
+// 文件上传过程中会触发onProgress事件
+easy.onProgress = function (p) {
+    // p是上传进度百分比
+    console.log('上传中', p)
+}
+// 每完成一个文件上传会触发onLoad事件
+easy.onLoad = function (_this) {
+    // _this是当前XMLHttpRequest实例
+    console.log('上传完一个', _this)
+}
+// 每失败一个文件上传会触发onError事件
+easy.onError = function (_this) {
+    // _this是当前XMLHttpRequest实例
+    console.log('上传失败一个', _this)
+}
+// 文件队列（所有文件）上传完成后会触发onEnd事件
+easy.onEnd = function () {
+    // this是本次new出来的EasyUpload实例对象，this包含本实例的配置、属性、方法等
+    console.log('上传完成', this)
+}
 
-        // return file.base64; //发送格式为base64时
-
-        return null; //发送空数据，用于测试。默认return null
-    },
-    checkSuccessCode: function (xhr) {
-        if (/error/.test(xhr.responseText.toLowerCase())) { //这里判断仅仅用于测试，具体看项目
-            return false;
-        } else {
-            return true;
-        } //默认return ture
-    },
-    uploadStart: function (self) {
-        // 文件队列上传前的回调函数，传入唯一参数'self'是当前插件实例
-        console.log('上传开始，现在的队列是', self.files)
-    },
-    uploadEnd: function (self) {
-        // 文件队列上传完成后的回调函数，传入唯一参数'self'是当前插件实例
-        console.log('上传完成了，现在的队列是', self.files)
-    }
-});
+// 创建另一个实例如下
+const easy2 = new EasyUpload('#easy2')

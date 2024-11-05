@@ -1,0 +1,210 @@
+@basicPix: 10px; // 基准像素
+
+.easy-upload {
+    padding: @basicPix;
+    font-size: @basicPix*1.4;
+    border: 1px solid #c0ccda;
+
+    ul,
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .over-hidden {
+        overflow: hidden;
+    }
+
+    .no-select {
+        user-select: none;
+    }
+
+    .no-border {
+        border: none;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .radius {
+        border-radius: @basicPix*0.5;
+    }
+
+    .white {
+        color: #fff;
+    }
+
+    .blue {
+        color: #409eff;
+    }
+
+    .bg-blue {
+        background-color: #409eff;
+    }
+
+    .red {
+        color: #f00;
+    }
+
+    .bg-red {
+        background-color: #f00;
+    }
+
+    .green {
+        color: #13ce66;
+    }
+
+    .bg-green {
+        background-color: #13ce66;
+    }
+
+    .yellow {
+        color: #FF8C00;
+    }
+
+    .bg-yellow {
+        background-color: #FF8C00;
+    }
+
+    .btns {
+        margin-bottom: @basicPix;
+    }
+
+    .msg {
+        margin-left: @basicPix*2;
+        background-color: #eee;
+    }
+
+    .file-li {
+        margin-top: @basicPix*0.5;
+        height: @basicPix*6;
+        list-style: none;
+        border: 1px solid #c0ccda;
+    }
+
+    .info {
+        box-sizing: border-box;
+        float: left;
+        width: 100%;
+        padding: @basicPix @basicPix*7;
+    }
+
+    .name-size {
+        float: left;
+    }
+
+    .f-size {
+        font-size: @basicPix*1.2;
+        margin-right: @basicPix*0.5;
+    }
+
+    .f-name {
+        font-style: normal;
+        font-weight: bold;
+    }
+
+    .tips {
+        float: right;
+    }
+
+    .wrap {
+        margin-top: @basicPix*0.8;
+        width: 100%;
+        height: @basicPix*0.5;
+        background-color: #eee;
+    }
+
+    .progress {
+        width: 0;
+        height: 100%;
+    }
+
+    .pic-box {
+        float: left;
+        margin-left: -100%;
+        width: @basicPix*6;
+        height: @basicPix*6;
+    }
+
+    .icon::after {
+        content: 'File';
+        display: block;
+        font-size: @basicPix*3;
+        font-weight: bold;
+        text-align: center;
+        line-height: @basicPix*5;
+        color: #333;
+        border: 1px solid #333;
+        border-radius: @basicPix*0.5;
+    }
+
+    .pic {
+        display: block;
+        margin: @basicPix*0.5 0 0 @basicPix*0.5;
+        width: @basicPix*5;
+        height: @basicPix*5;
+        background-size: 100%;
+    }
+
+    .li-btns {
+        float: right;
+        margin-left: -@basicPix*6;
+        width: @basicPix*6;
+        height: 100%;
+    }
+
+    .checone {
+        float: left;
+        margin-top: @basicPix*2.5;
+    }
+
+
+    .deleone {
+        float: right;
+        width: 0;
+        height: 0;
+        border-top: @basicPix*2 solid #f00;
+        border-right: @basicPix*2 solid #f00;
+        border-bottom: @basicPix*2 solid transparent;
+        border-left: @basicPix*2 solid transparent;
+
+    }
+
+    .deleone::after {
+        content: 'X';
+        display: block;
+        margin-top: -@basicPix*2;
+        font-size: @basicPix*1.5;
+    }
+
+    // 补充动画效果，ie9及以下不支持
+    @keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        50% {
+            transform: translateX(5px);
+        }
+
+        75% {
+            transform: translateX(-5px);
+        }
+
+        100% {
+            transform: translateX(5px);
+        }
+    }
+
+    .new {
+        display: inline-block;
+        animation: shake 0.5s;
+        animation-iteration-count: 1.5;
+        animation-timing-function: ease-in-out;
+    }
+}

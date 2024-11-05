@@ -1,448 +1,335 @@
 /**
- * @author https://github.com/funnyque/easyUpload.js; WeChat:qqyun686
- * @version V3.0.1
- * @description 一款简单易用的H5/Web文件上传插件，支持样式自定义，支持数据可配置，支持多实例上传...
+ * @description: 基于file input及原生js的文件上传插件，仅支持ie9及以上
+ * @version: V4.0.0
+ * @author: funnyque@163.com
+ * @Github: https://github.com/funnyque/easyUpload.js
  */
-;(function (window, document) {
-    var defaultConfigs = {
-        easyId: '', //插件插入节点的Id，String类型
-        accept: '.jpg,.png,.pdf', //允许文件类型后缀名，逗号分隔，String类型
-        action: '', //上传文件地址，String类型
-        btnText: {  //按钮展示文字
-            select: '选择文件',
-            upload: '上传',
-            delete: '删除',
-            cancel: '终止'
-        },
-        maxCount: 3, //插件单次添加文件的最大数量，Number类型
-        maxSize: 3, //允许上传文件的最大体积，单位M，Number类型
-        multiple: true, //是否开启多文件上传，Boolean类型
-        messageTime: 2000, //messageBox消息提示毫秒数，Number类型
-        responseType: 'text', //xhr的responseType格式，String类型
-        showSize: true, //是否展示文件体积，Boolean类型
-        showLoading: false, //是否展示上传loading动画，Boolean类型
-        statusText: {  //不同状态展示的提示文字，key为对应文件状态(不可修改)，value为展示文字
-            0: '允许上传', //文件大小验证合格后的初始状态
-            1: '即将上传', //等待上传队列执行到自己时的状态
-            2: '0%',      //上传时刚发出xhr还没响应时的状态
-            3: '上传成功',  //xhr响应&上传成功时的状态
-            4: '上传失败',  //xhr响应&上传失败时的状态
-            5: '体积超出',  //检测文件大小超出限定值时的状态
-        },
-        statusTextColor: {  //不同状态'提示文字'标签的className，key为对应文件状态(不可修改)，value为标签的className
-            0: 'normalcolor',  //正常状态字体色的className
-            1: 'normalcolor',  //正常状态字体色的className
-            2: 'normalcolor',  //正常状态字体色的className
-            3: 'normalcolor',  //正常状态字体色的className
-            4: 'failedcolor',  //失败状态字体色的className
-            5: 'warncolor',    //警告状态字体色的className
-        },
-        statusBg: {  //不同状态对应标签的className，key为对应文件状态(不可修改)，value为标签的className
-            0: 'normalbg',  //正常状态背景色的className
-            1: 'normalbg',  //正常状态背景色的className
-            2: 'normalbg',  //正常状态背景色的className
-            3: 'normalbg',  //正常状态背景色的className
-            4: 'failedbg',  //失败状态背景色的className
-            5: 'warnbg',    //警告状态背景色的className
-        },
-        timeout: 0, //请求超时毫秒数，0表示永久，Number类型
-        withCredentials: true, //是否允许请求头自带cookie等证书，Boolean类型
-        setRequestHeader: null, //配置xhr请求头的方法
-        buildSendData: null, //配置xhr发送数据格式的方法，返回data
-        checkSuccessCode: null, //检查成功状态码的方法，返回布尔值，默认返回true
-        uploadStart: null, //每个文件队列上传前的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
-        uploadEnd: null //每个文件队列上传完成后的回调函数，传入参数'self'是当前easyUpload实例，可通过self.files查看队列文件
+; (function (win, doc) {
+    // 插件默认配置
+    var oConf = {
+        accept: '.jpg,.png,.pdf,.doc,.docx', // 允许导入文件类型
+        btnS: '导入文件', // 导入文件按钮展示文字
+        btnU: '上传', // 上传文件按钮展示文字
+        btnD: '删除', // 删除文件按钮展示文字
+        btnC: '终止', // 终止上传按钮展示文字
+        maxCount: 3, // 允许单次导入文件数量
+        naxSize: 3, // 允许单个文件最大体积，单位M
+        multiple: true, // 是否允许一次导入多个文件
+        responseType: 'text', // 设置XMLHttpRequest响应数据格式
+        timeout: 0, // 设置XMLHttpRequest求超时时间
+        url: '', // 文件上传地址
+        withCredentials: true, // 设置跨域请求是否提供凭据信息,
+        readAs: 'DataURL' // 默认设置读取及长传文件为DataURL即base64格式。未定义setData方法情况下，以此字段定义数据格式上传
     };
-    function EasyUpload(configs) {
-        var self = this instanceof EasyUpload ? this : Object.create(EasyUpload.prototype);
-        self.configs = Object.assign({}, defaultConfigs, configs);
-        self.files = [];
-        self.fileId = 0;
-        self.xhrFiles = [],
-        self.isXhrReady = true,
-        self.xhr = new XMLHttpRequest();
-        render(self);
-        return self;
-    }
-    EasyUpload.prototype = { constouctor: EasyUpload }; //重新指定constouctor
-    function render(self) {
-        var easyTemplate = 
-            '<span class="message-box">我是message</span>' +
-            (self.configs.showLoading ?
-            '<div class="loading">' +
-                '<div class="loading-icon"></div>' +
-                '<div class="loading-mask"></div>' +
-            '</div>' : '') +
-            '<input type="file" name="file" class="input-file"'+ (self.configs.multiple ? 'multiple': '') +' accept="'+ self.configs.accept +'">' +
-            '<div class="btn-list">' +
-                '<div btntype="select" class="btn btn-list-item btnlist-item-selsct">'+ self.configs.btnText.select +'</div>' +
-                '<div btntype="upload" class="btn btn-list-item btnlist-item-upload">'+ self.configs.btnText.upload +'</div>' +
-                '<div btntype="delete" class="btn btn-list-item btnlist-item-danger">'+ self.configs.btnText.delete +'</div>' +
-                '<div btntype="cancel" class="btn btn-list-item btnlist-item-danger">'+ self.configs.btnText.cancel +'</div>' +
-                '<div btntype="checkall" class="btn btn-list-item checkbox unchecked">✓</div>' +
-            '</div>' +
-            '<ul class="file-list">' +
-            '</ul>';
-        document.getElementById(self.configs.easyId).innerHTML = easyTemplate;
-        bindBtnList(self);
-        bindInputFile(self);
-    }
-    function renderList(self) {
-        var listTemplate = '';
-        for (var i = 0; i < self.files.length; i++) {
-            listTemplate +=
-                '<li class="file-list-item" fileid="' + self.files[i].id + '">' +
-                '<div class="preview">' +
-                (/image\//.test(self.files[i].type) ? '<img class="preview-img"' + ' src="' + self.files[i].base64 + '" alt="' + self.files[i].name + '">' : '<div class="preview-div"></div>') +
-                '</div>' +
-                '<div class="btn-file">' +
-                '<div btntype="delone" class="btn btn-file-del" fileid="' + self.files[i].id + '">' +
-                '<span btntype="delone" class="btn-file-del-text" fileid="' + self.files[i].id + '">X</span>' +
-                '</div>' +
-                '<div btntype="checkone" class="btn btn-file-checkbox checkbox ' + (self.files[i].isChecked ? 'checked' : 'unchecked') + '" fileid="' + self.files[i].id + '">✓</div>' +
-                '</div>' +
-                '<div class="fileinfo">' +
-                '<p class="fileinfo-text">' +
-                '<span class="fileinfo-text-name">' + (self.configs.showSize ? '<i class="fileinfo-text-size ' + matchFileSizeBg(self, self.files[i]) + '">' + bytesToSize(self.files[i].size) + '</i>' : '') + self.files[i].name + '</span>' +
-                '<span class="fileinfo-text-status ' + self.configs.statusTextColor[self.files[i].status] + '" fileid="' + self.files[i].id + '">' + self.configs.statusText[self.files[i].status] + '</span>' +
-                '</p>' +
-                '<div class="fileinfo-progress">' +
-                '<div class="fileinfo-progress-bar ' + self.configs.statusBg[self.files[i].status] + '" style="width:' + self.files[i].progress + ';" fileid="' + self.files[i].id + '"></div>' +
-                '</div>' +
-                '</div>' +
-                '</li>';
-        }
-        document.getElementById(self.configs.easyId).querySelector('.file-list').innerHTML = listTemplate;
-        bindFileList(self);
-    }
-    function bindBtnList(self) {
-        var easyUpload = document.getElementById(self.configs.easyId);
-        easyUpload.querySelector('.btn-list').onclick = function (evt) {
-            var evt = evt || window.event,
-                target = evt.target || evt.srcElement,
-                btntype = target.getAttribute('btntype');
-            switch (btntype) {
-                case 'select':
-                    selectFiles(self);
-                    break;
-                case 'upload':
-                    uploadFiles(self);
-                    break;
-                case 'delete':
-                    delFiles(self);
-                    checkAll(self, 'delete');
-                    renderList(self);
-                    break;
-                case 'cancel':
-                    cancelUpload(self);
-                    break;
-                case 'checkall':
-                    checkAll(self, 'click');
-                    checkList(self);
-                    break;
+    function EasyUpload(id, obj) {
+        this.eNode = doc.querySelector(id);
+        if (!this.eNode) { alert('插件初始化id错误'); return }
+        var _this = this; _this.files = {}; _this.xhrs = {}; _this.id = 0;
+        this.conf = assign(obj);
+        build.call(_this);
+        this.fNode = this.eNode.querySelector('.file-inpt');
+        this.lNode = this.eNode.querySelector('.file-list');
+        this.eNode.onclick = function (e) {
+            var tag = e.target;
+            if (tag.className.indexOf('select') !== -1) {
+                _this.fNode.click();
+            } else if (tag.className.indexOf('upload') !== -1) {
+                upload.call(_this);
+            } else if (tag.className.indexOf('delete') !== -1) {
+                delet.call(_this, 0, tag);
+            } else if (tag.className.indexOf('cancel') !== -1) {
+                cancel.call(_this);
+            } else if (tag.className.indexOf('checall') !== -1) {
+                check.call(_this, 0, tag);
+            } else if (tag.className.indexOf('checone') !== -1) {
+                check.call(_this, 1, tag); // 默认全选，第二个参数有真值时选一个
+            } else if (tag.className.indexOf('deleone') !== -1) {
+                delet.call(_this, 1, tag); // 默认删除选中，第二个参数有真值时删除一个
             }
         }
     }
-    function bindInputFile(self) {
-        var inputFile = document.getElementById(self.configs.easyId).querySelector('.input-file');
-        inputFile.addEventListener('change', function () {
-            var i = 0,
-                _this = this;
-            function pushFile(obj) {
-                if (self.files.length < self.configs.maxCount) {
-                    self.files.push(obj);
-                    self.fileId++;
-                } else {
-                    showMessage(self, {
-                        text: '文件数量超出',
-                        class_name: self.configs.statusBg[5]
-                    })
-                }
+    win.EasyUpload = EasyUpload;
+    function build() {
+        var arr = [
+            '<div class="easy-upload">',
+            '   <div class="btns">',
+            '       <input type="file" name="file" class="file-inpt" accept="' + this.conf.accept + '"' + (this.conf.multiple ? ' multiple ' : '') + ' style="display: none;">',
+            '       <input type="button" value="' + this.conf.btnS + '" class="select pointer">',
+            '       <input type="button" value="' + this.conf.btnU + '" class="upload no-border radius pointer white bg-blue">',
+            '       <input type="button" value="' + this.conf.btnD + '" class="delete no-border radius pointer white bg-red">',
+            '       <input type="button" value="' + this.conf.btnC + '" class="cancel no-border radius pointer white bg-red">',
+            '       <input type="checkbox" class="checall pointer">',
+            '       <i class="msg new">未导入文件</i>',
+            '   </div>',
+            '   <ul class="file-list">',
+            '   </ul>',
+            '</div>'
+        ];
+        this.eNode.innerHTML = arr.join('');
+        // 同步处理异步dom更新
+        setTimer.call(this, function (_this) {
+            _this.fNode.onchange = function () {
+                packFiles.call(_this, this.files);
+                render.call(_this);
+                checkAll.call(_this);
             }
-            function buildFile() {
-                if (i < _this.files.length) {
-                    var obj = {
-                        id: self.fileId,
-                        name: _this.files[i].name,
-                        size: _this.files[i].size,
-                        type: _this.files[i].type,
-                        isChecked: false,
-                        status: 0,
-                        progress: '0%',
-                        file: _this.files[i]
-                    };
-                    if (/image\//.test(_this.files[i].type)) {
-                        readImg(_this.files[i], function (base64) {
-                            obj.base64 = base64;
-                            pushFile(obj);
-                            i++;
-                            buildFile();
-                        });
-                    } else {
-                        pushFile(obj);
-                        i++;
-                        buildFile();
-                    }
-                } else {
-                    checkAll(self);
-                    renderList(self);
-                    _this.value = [];
-                }
-            }
-            buildFile();
         });
     }
-    function bindFileList(self) {
-        var easyUpload = document.getElementById(self.configs.easyId);
-        easyUpload.querySelector('.file-list').onclick = function (evt) {
-            var evt = evt || window.event,
-                target = evt.target || evt.srcElement,
-                fileId = target.getAttribute('fileid'),
-                btntype = target.getAttribute('btntype');
-            switch (btntype) {
-                case 'checkone':
-                    checkFileById(self, fileId);
-                    checkAll(self);
-                    checkList(self, fileId);
-                    break;
-                case 'delone':
-                    delFiles(self, fileId);
-                    checkAll(self);
-                    renderList(self);
-                    break;
+    function render() {
+        var arrs = [];
+        for (var i in this.files) {
+            if (this.files[i] !== null) {
+                var arr = [
+                    '<li class="file-li over-hidden radius">',
+                    '   <div class="info">',
+                    '       <p class="over-hidden ' + matchColor(this.files[i].status) + '">',
+                    '           <span class="name-size">',
+                    '               <i class="f-size white radius ' + matchColor(this.files[i].status, 1) + '">' + this.files[i].size + '</i>',
+                    '               <i class="f-name">' + this.files[i].name + '</i>',
+                    '           </span>',
+                    '           <span class="tips">',
+                    '               <i class="status">' + matchText(this.files[i].status) + '</i>',
+                    '               <i class="percent">' + this.files[i].percent + '</i>',
+                    '           </span>',
+                    '       </p>',
+                    '       <div class="wrap over-hidden radius">',
+                    '           <div class="progress ' + matchColor(this.files[i].status, 1) + '" style="width:' + this.files[i].percent + ';"></div>',
+                    '       </div>',
+                    '   </div>',
+                    '   <div class="pic-box">',
+                    '       <i class="pic no-selec' + (/data:image\//.test(this.files[i].data) ? '" style="background-image: url(' + this.files[i].data + ');"' : ' icon"') + '></i>',
+                    '   </div>',
+                    '   <div class="li-btns over-hidden">',
+                    '       <input type="checkbox" ' + (this.files[i].checked ? 'checked' : '') + ' data-id="' + i + '" class="checone pointer">',
+                    '       <i data-id="' + i + '" class="deleone no-selec pointer white"></i>',
+                    '   </div>',
+                    '</li>'
+                ];
+                arrs.push(arr.join(''));
             }
         }
+        this.lNode.innerHTML = arrs.join('');
     }
-    function selectFiles(self) {
-        document.getElementById(self.configs.easyId).querySelector('.input-file').click();
+    function setTimer(cb) {
+        var _this = this,
+            t = null;
+        t = setTimeout(function () {
+            cb(_this);
+            clearTimeout(t);
+        }, 0);
     }
-    function delFiles(self, fileId) {
-        if (self.files.length && !getCheckedCount(self) && fileId==undefined) {
-            showMessage(self, {
-                text: '未选中文件',
-                class_name: self.configs.statusBg[5]
-            })
-            return;
-        }
-        var newFiles = [];
-        for (var i = 0; i < self.files.length; i++) {
-            if (fileId && self.files[i].id != fileId) newFiles.push(self.files[i]);
-            if (!fileId && !self.files[i].isChecked) newFiles.push(self.files[i]);
-        }
-        self.files = newFiles;
-    }
-    function cancelUpload(self) {
-        self.xhr.onabort = function () {
-            showMessage(self, {
-                text: '成功取消上传',
-                class_name: self.configs.statusBg[3]
-            })
-        }
-        self.xhr.abort();
-    }
-    function checkAll(self, evtType) {
-        var allBox = document.getElementById(self.configs.easyId).querySelector('.btn-list').querySelector('.checkbox');
-        if (!self.files.length) {
-            if (evtType == 'delete') return;
-            if (/\sunchecked$/.test(allBox.className)) {
-                setCheckBox(allBox, true);
-                return;
-            }
-            if (/\schecked$/.test(allBox.className)) {
-                setCheckBox(allBox, false);
-                return;
-            }
+    function packFiles(ofs) {
+        var _this = this,
+            fs = [], //保存maxCount以内file
+            frs = {}; // 保存FileReader对象
+        if (ofs.length > this.conf.maxCount) {
+            // 触发onMax事件
+            this.onMax && this.onMax.call(_this, {
+                in: ofs.length,
+                max: this.conf.maxCount
+            });
+            for (var i = 0; i < this.conf.maxCount; i++) { fs.push(ofs[i]) }
         } else {
-            var isAllChecked = getCheckedCount(self) == self.files.length;
-            if (evtType == 'click') {
-                setCheckBox(allBox, !isAllChecked);
-                setCheckedFile(self, (isAllChecked ? false : true));
-            } else {
-                setCheckBox(allBox, isAllChecked);
+            fs = ofs;
+        }
+        for (var i = 0; i < fs.length; i++) {
+            frs[i] = new FileReader();
+            // 将数据保存到FileReader对象上
+            frs[i].i = i;
+            frs[i].o = {
+                id: this.id,
+                name: fs[i].name,
+                type: fs[i].type,
+                size: sizeConvert(fs[i].size),
+                checked: false,
+                percent: '0%',
+                status: statusConvert.call(this, fs[i].size),
+                source: fs[i],
+                data: ''
+            }
+            frs[i].id = this.id;
+            this.id++;
+            frs[i].onload = function (e) {
+                this.o.data = e.target.result;
+                _this.files[this.id] = this.o;
+                render.call(_this);
+                checkAll.call(_this);
+                if (this.i == fs.length - 1) {
+                    frs = null; // 销毁FileReader对象集合
+                    _this.fNode.value = '';
+                }
+            }
+            var ra = this.conf.readAs;
+            frs[i]['readAs' + ra] ? frs[i]['readAs' + ra](fs[i]) : frs[i].readAsDataURL(fs[i]);
+        }
+    }
+    function upload() {
+        var _this = this,
+            arr = [];
+        this.xhrs.on = 0; // 开始上传xhr对象为0个
+        this.xhrs.done = 0; // 已上传完xhr对象为0个
+        for (var i in this.files) {
+            if (this.files[i] !== null && this.files[i].checked && this.files[i].status !== '-2') {
+                this.xhrs[i] = new XMLHttpRequest();
+                this.xhrs[i].id = this.files[i].id // 保存当前上传文件id 到xhr对象上
+                this.xhrs[i].open('post', this.conf.url);
+                this.xhrs[i].timeout = this.conf.timeout;
+                this.xhrs[i].responseType = this.conf.responseType; //响应返回的数据格式 'json',ie10不支持
+                this.xhrs[i].withCredentials = this.conf.withCredentials;
+                _this.setHeader && _this.setHeader.call(_this, this.xhrs[i]);
+                this.xhrs[i].send(this.setData ? this.setData.call(this, this.files[i]) : this.files[i].data);
+                this.xhrs.on++;
+                this.files[i].status = '1';
+                this.files[i].percent = '0%';
+                render.call(this);
+                this.xhrs[i].onprogress = function (e) {
+                    if (e.lengthComputable) {
+                        var p = (e.loaded / e.total) * 100 + '%';
+                        _this.files[this.id].status = '1';
+                        _this.files[this.id].percent = p;
+                        render.call(_this);
+                        _this.onProgress && _this.onProgress.call(_this, p);
+                    }
+                };
+                this.xhrs[i].onload = function () {
+                    _this.xhrs.done++;
+                    var flag = _this.setFlag && _this.setFlag.call(_this, this);
+                    if (flag == undefined ? (this.status >= 200 && this.status < 300) : flag) {
+                        _this.files[this.id].status = '2';
+                    } else {
+                        _this.files[this.id].status = '-1';
+                    }
+                    render.call(_this);
+                    _this.onLoad && _this.onLoad.call(_this, this);
+                    if (_this.xhrs.on == _this.xhrs.done) {
+                        showMsg.call(_this, '上传结束');
+                        _this.onEnd && _this.onEnd.call(_this, this);
+                        _this.xhrs = {};
+                    }
+                };
+                this.xhrs[i].onerror = function () {
+                    _this.xhrs.done++;
+                    _this.files[this.id].status = '-1';
+                    render.call(_this);
+                    if (_this.xhrs.on == _this.xhrs.done + 1) {
+                        showMsg.call(_this, '上传结束');
+                        _this.onEnd && _this.onEnd.call(_this, this);
+                        _this.xhrs = {};
+                    } else {
+                        _this.onError && _this.onError.call(_this, this);
+                    }
+                };
             }
         }
     }
-    function checkList(self, fileId) {
-        var easyUpload = document.getElementById(self.configs.easyId);
-        if (fileId) {
-            var file = getFileById(self, fileId),
-                checkbox = easyUpload.querySelector('[fileid="' + fileId + '"]').querySelector('.checkbox');
-            setCheckBox(checkbox, file.isChecked);
+    function delet(flag, tag) {
+        if (flag) {
+            var id = tag.getAttribute('data-id');
+            this.files[id] = null;
         } else {
-            var isChecked = getCheckedCount(self) == self.files.length,
-                fileList = easyUpload.querySelectorAll('.file-list-item');
-            for (var i = 0; i < fileList.length; i++) {
-                setCheckBox(fileList[i].querySelector('.checkbox'), isChecked);
+            for (var i in this.files) {
+                if (this.files[i] !== null && this.files[i]['checked']) this.files[i] = null;
+            }
+        }
+        render.call(this);
+        checkAll.call(this);
+    }
+    function cancel() {
+        var _this = this;
+        for (var i in this.xhrs) {
+            if (this.xhrs[i]) {
+                this.xhrs[i].onabort = function () {
+                    showMsg.call(_this, '成功终止');
+                };
+                this.xhrs[i].abort();
             }
         }
     }
-    function matchFileSizeBg(self, file) {
-        var fileSize = (file.size / Math.pow(1024, 2)).toFixed(2);
-        if (self.configs.maxSize > fileSize) {
-            return self.configs.statusBg[0];
+    function check(flag, tag) {
+        if (flag) {
+            checkAll.call(this, tag);
         } else {
-            file.status = 5;
-            return self.configs.statusBg[5];
-        }
-    }
-    function getCheckedCount(self) {
-        var count = 0;
-        for (var i = 0; i < self.files.length; i++) {
-            if (self.files[i].isChecked) count++;
-        }
-        return count;
-    }
-    function getFileById(self, id) {
-        for (var i = 0; i < self.files.length; i++) {
-            if (self.files[i].id == id) return self.files[i];
-        }
-    }
-    function checkFileById(self, fileId) {
-        for (var i = 0; i < self.files.length; i++) {
-            if (self.files[i].id == fileId) {
-                self.files[i].isChecked = !self.files[i].isChecked;
+            for (var i in this.files) {
+                if (this.files[i] !== null) this.files[i]['checked'] = tag.checked;
             }
-        }
-    }
-    function bytesToSize(bytes) {
-        if (bytes === 0) return '0 B';
-        var k = 1024,
-        sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-        i = Math.floor(Math.log(bytes) / Math.log(k));
-        return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
-    }
-    function setStatus(self) {
-        var fileList = document.getElementById(self.configs.easyId).querySelectorAll('.file-list-item');
-        for (var i = 0; i < fileList.length; i++) {
-            var id = fileList[i].getAttribute('fileid'),
-                tag = fileList[i].querySelector('.fileinfo-text-status');
-            tag.innerHTML = self.configs.statusText[getFileById(self, id).status]
-        }
-    }
-    function setProgress(self, fileObj) {
-        var easyUpload = document.getElementById(self.configs.easyId);
-        var tag = easyUpload.querySelector('[fileid="' + fileObj.id + '"]').querySelector('.fileinfo-progress-bar');
-        tag.style.width = fileObj.progress;
-        tag.className = 'fileinfo-progress-bar ' + self.configs.statusBg[fileObj.status];
-    }
-    function setStatusColor(self, fileObj) {
-        var tags = document.getElementById(self.configs.easyId).querySelectorAll('.fileinfo-text-status');
-        for (var i = 0; i < tags.length; i++) {
-            if (fileObj.id == tags[i].getAttribute('fileid')) {
-                tags[i].className = 'fileinfo-text-status ' + self.configs.statusTextColor[fileObj.status];
+            var cks = this.eNode.querySelectorAll('.checone');
+            for (var j = 0; j < cks.length; j++) {
+                cks[j]['checked'] = tag.checked;
             }
+            showMsg.call(this, tag.checked ? '已选中' : '未选中')
         }
 
     }
-    function setCheckedFile(self, isChecked) {
-        for (var i = 0; i < self.files.length; i++) {
-            self.files[i].isChecked = isChecked;
+    function checkAll(tag) {
+        var hasOne = false, // 默认1个都未选
+            isAll = true, // 默认选中了所有
+            allTag = this.eNode.querySelector('.checall');
+        if (tag) { // 选中1个
+            var id = tag.getAttribute('data-id');
+            this.files[id]['checked'] = tag.checked;
+        }
+        for (var i in this.files) {
+            if (this.files[i] !== null) {
+                if (this.files[i]['checked']) {
+                    hasOne = true;
+                } else {
+                    isAll = false;
+                }
+            }
+        }
+        allTag.checked = isAll;
+        showMsg.call(this, hasOne ? '已选中' : '未选中');
+    }
+    function matchColor(s, t) {
+        t ? t = 'bg-' : t = '';
+        switch (s) {
+            case '-2':
+                return t + 'yellow';
+            case '-1':
+                return t + 'red';
+            case '0':
+                return t + 'blue';
+            case '1': case '2':
+                return t + 'green';
         }
     }
-    function setCheckBox(tag, isChecked) {
-        if (isChecked) {
-            if (/\sunchecked$/.test(tag.className)) tag.className = tag.className.replace('unchecked', 'checked');
+    function matchText(s) {
+        switch (s) {
+            case '-2':
+                return '文件过大';
+            case '-1':
+                return '上传失败';
+            case '0':
+                return '允许上传'
+            case '1':
+                return '正在上传';
+            case '2':
+                return '上传成功';
+        }
+    }
+    function showMsg(m) {
+        var n = this.eNode.querySelector('.msg').innerText = m || '操作成功';
+    }
+    /** 以下为工具函数 */
+    function assign(s) {
+        if (s !== null && typeof s === 'object') {
+            for (var k in s) oConf[k] == undefined ? '' : oConf[k] = s[k];
+        }
+        return oConf;
+    }
+    function sizeConvert(bytes) {
+        if (bytes === 0) return '0 B';
+        var k = 1024,
+            sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
+        return (bytes / Math.pow(k, i)).toPrecision(3) + sizes[i];
+    }
+    function statusConvert(bytes) {
+        var fSize = (bytes / Math.pow(1024, 2)).toFixed(2);
+        if (this.conf.naxSize >= fSize) {
+            return '0';
         } else {
-            if (/\schecked$/.test(tag.className)) tag.className = tag.className.replace('checked', 'unchecked');
+            return '-2';
         }
     }
-    function readImg(file, cb) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            cb && cb(this.result);
-        }
-        reader.readAsDataURL(file);
-    }
-    function showLoading(self, isShow) {
-        var tag = document.getElementById(self.configs.easyId).querySelector('.loading');
-        tag.style.display = isShow ? 'block' : 'none';
-    }
-    function showMessage(self, obj) {
-        var tag = document.getElementById(self.configs.easyId).querySelector('.message-box');
-        tag.className = 'message-box ' + obj.class_name;
-        tag.style.display = 'inline-block';
-        tag.innerHTML = obj.text;
-        setTimeout(function() {
-            tag.style.display = 'none';
-        }, self.configs.messageTime);
-    }
-    function uploadFiles(self) {
-        for (var j = 0; j < self.files.length; j++) {
-            if (self.files[j].isChecked && (self.files[j].status == 4 || self.files[j].status == 0 || self.files[j].status == 3)) {
-                self.files[j].status = 1;
-                self.files[j].progress = '0%';
-                self.xhrFiles.push(self.files[j]);
-                setProgress(self, { progress: '0%', id: self.files[j].id, status: self.files[j].status });
-            }
-        }
-        if (!self.xhrFiles.length) {
-            if (self.files.length) {
-                showMessage(self, {
-                    text: '未选中有效文件',
-                    class_name: self.configs.statusBg[5]
-                })
-            }
-            return;
-        }
-        setStatus(self);
-        if(self.isXhrReady) {
-            var i = 0;
-            self.isXhrReady = false;
-            self.configs.uploadStart && self.configs.uploadStart(self);
-            self.configs.showLoading && showLoading(self, true);
-            function upload() {
-                self.xhrFiles[i].status = 2;
-                setStatus(self);
-                self.xhr.open('post', self.configs.action);
-                self.xhr.timeout = self.configs.timeout;
-                self.xhr.responseType = self.configs.responseType; //响应返回的数据格式 'json'ie10不支持
-                self.xhr.withCredentials = self.configs.withCredentials;
-                self.configs.setRequestHeader && self.configs.setRequestHeader(self.xhr);
-                self.xhr.addEventListener('progress', function(data){
-                    var progress = String(((data.loaded/data.total)*100).toFixed(2)) + '%';
-                    self.xhrFiles[i].progress = progress;
-                    setProgress(self, { progress: progress, id: self.xhrFiles[i].id, status: self.xhrFiles[i].status });
-                });
-                self.xhr.onreadystatechange = function() {
-                    if (self.xhr.readyState == 4) {
-                        var fileObj = {
-                            progress: self.xhrFiles[i].progress,
-                            id: self.xhrFiles[i].id,
-                            status: self.xhrFiles[i].status
-                        };
-                        if (self.xhr.status == 200 && (self.configs.checkSuccessCode == null) || self.configs.checkSuccessCode(self.xhr)) {
-                            setStatusColor(self, fileObj);
-                            setProgress(self, fileObj);
-                            changeStatus(3);
-                        } else {
-                            setStatusColor(self, fileObj);
-                            setProgress(self, fileObj);
-                            changeStatus(4);
-                        }
-                    }
-                }
-                if (self.configs.buildSendData == null) {
-                    self.xhr.send(null);
-                } else {
-                    self.xhr.send(self.configs.buildSendData(self.xhrFiles[i]));
-                }
-            }
-            upload();
-            function changeStatus(status) {
-                self.xhrFiles[i].status = status;
-                setStatus(self);
-                i++;
-                self.isXhrReady = true;
-                if (i < self.xhrFiles.length) {
-                    upload();
-                } else {
-                    self.xhrFiles = [];
-                    i = 0;
-                    self.configs.showLoading && showLoading(self, false);
-                    self.configs.uploadEnd && self.configs.uploadEnd(self);
-                }
-            }
-        }
-    }
-    window.easyUpload = EasyUpload;
-}(window, document));
+}(window, document))
