@@ -3,7 +3,7 @@
 **一款轻量级、易使用、配置灵活的H5/Web上传插件，基于file input。采用原生js及css编写，不依赖其他类库，兼容IE9及以上，压缩体积仅有8kb (css+js)。支持多文件上传，多实例上传，并发上传，混合上传等** 
 
 ![实例图片](https://s3.bmp.ovh/imgs/2024/11/05/35f6d53466ae53e5.png)
-**「 [点我立即测试👉](https://funnyque.github.io/easyUpload.js/) 」**
+**「 [👉点我立即测试](https://funnyque.github.io/easyUpload.js/) 」**
 
 ## 特性
 - *上传文件类型/数量/大小可配置*
