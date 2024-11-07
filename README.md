@@ -1,4 +1,5 @@
-# easyUpload.js ![version](https://img.shields.io/badge/version-4.0.0-informational) ![build](https://img.shields.io/badge/build-passing-brightgreen)
+# easyUpload.js V4.0.0
+![version](https://img.shields.io/badge/version-4.0.0-informational) ![build](https://img.shields.io/badge/build-passing-brightgreen) ![browser](https://img.shields.io/badge/Browser-IE9+-brightgreen)
 **一款轻量级、易使用、配置灵活的H5/Web上传插件，基于file input。采用原生js及css编写，不依赖其他类库，兼容IE9及以上，压缩体积仅有8kb (css+js)。支持多文件上传，多实例上传，并发上传，混合上传等** 
 - easyUpload.js有js和npm两个版本，本版本为js版本。还可「[点我尝试npm版本](https://github.com/funnyque/easyUpload.js/tree/master/npm_version/easy-upload-js)」。
 
@@ -71,6 +72,9 @@
         // this是本次new出来的EasyUpload实例对象，this包含本实例的配置、属性、方法等
         console.log('上传完成', this)
     }
+
+    // 创建另一个实例如下
+    var easy2 = new EasyUpload('#easy2', { url: 'xxxx' })
 ```
 
 ## 参数说明
@@ -95,3 +99,4 @@
 
 ## 欢迎交流及支持
 *@email: funnyque@163.com*
+*@wechat id: quedamao*
